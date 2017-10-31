@@ -1,13 +1,12 @@
-package core;
+package minishogi.core;
 import java.io.*;
 import java.util.*;
-
 public class Utils {
 
     static class InitialPosition {
         String piece;
         String position;
-
+        
         public InitialPosition(String pc, String pos) {
             piece = pc;
             position = pos;
@@ -116,6 +115,7 @@ public class Utils {
             moves.add(line);
             line = br.readLine();
         }
+        br.close();
 
         return new TestCase(initialPieces, upperCaptures, lowerCaptures, moves);
     }
