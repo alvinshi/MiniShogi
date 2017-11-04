@@ -45,4 +45,9 @@ public final class SilverGeneralPiece extends AbstractPiece{
 		}
 	}
 
+	@Override
+	public boolean isLegalDrop(int row, int col, Board board) {
+		return true;
+	}
+
 }

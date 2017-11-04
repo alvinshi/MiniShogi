@@ -32,4 +32,9 @@ public final class KingPiece extends AbstractPiece{
 	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
 		return MoveCheckUtils.kingPieceMoveCheck(startRow, startCol, endRow, endCol);
 	}
+
+	@Override
+	public boolean isLegalDrop(int row, int col, Board board) {
+		return true;
+	}
 }

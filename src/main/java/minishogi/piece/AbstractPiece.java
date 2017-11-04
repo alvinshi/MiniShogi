@@ -49,6 +49,9 @@ public abstract class AbstractPiece implements Piece{
 	public abstract boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board);
 	
 	@Override
+	public abstract boolean isLegalDrop(int row, int col, Board board);
+	
+	@Override
 	public String toString() {
 		return String.valueOf(symbol);
 	}	

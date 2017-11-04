@@ -32,6 +32,14 @@ public final class Board {
 	}
 	
 	/**
+	 * Get the size of the board
+	 * @return : board size
+	 */
+	public int getBoardSize() {
+		return BOARD_SIZE;
+	}
+	
+	/**
 	 * Get the Piece on the specified location
 	 * @param row : row number (1~5)
 	 * @param col : col number (a~e)
@@ -100,7 +108,11 @@ public final class Board {
 	}
 	
 	boolean makeDrop(Piece p, String address, Player currentPlayer) {
-		//TODO : implement this
+		if (!isValidAddr(address)) return false;
+		int row = addr2Row(address);
+		int col = addr2Col(address);
+		if (!p.isLegalDrop(row, col, this)) return false;
+		//TODO : check checkmate
 		return true;
 	}
 }

@@ -32,4 +32,9 @@ public final class GoldGeneralPiece extends AbstractPiece{
 	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
 		return MoveCheckUtils.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 	}
+
+	@Override
+	public boolean isLegalDrop(int row, int col, Board board) {
+		return true;
+	}
 }

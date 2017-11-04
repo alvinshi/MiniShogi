@@ -46,4 +46,8 @@ public final class BishopPiece extends AbstractPiece{
 		}
 	}
 
+	@Override
+	public boolean isLegalDrop(int row, int col, Board board) {
+		return true;
+	}
 }

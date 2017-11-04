@@ -45,4 +45,13 @@ public interface Piece {
 	 * @return : true if the move is with the range, false otherwise
 	 */
 	boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board);
+	
+	/**
+	 * check if the drop is legal
+	 * @param row : row to drop
+	 * @param col : column to drop
+	 * @param board : board is needed to check some special case (e.g. pawn)
+	 * @return : true if the drop obeys the rule sets by the piece identity
+	 */
+	boolean isLegalDrop(int row, int col, Board board);
 }

@@ -1,6 +1,7 @@
 package minishogi.piece;
 
 import minishogi.core.Board;
+import minishogi.core.Piece;
 import minishogi.core.Player;
 
 /**
@@ -49,6 +50,19 @@ public final class PawnPiece extends AbstractPiece{
 			promoted = true;
 		}
 		return isLegalMove;
+	}
+
+	@Override
+	public boolean isLegalDrop(int row, int col, Board board) {
+		Player owner = getOwner();
+		for (int i = 0; i < board.getBoardSize(); i++) {
+			Piece p = board.getPiece(i, col);
+			if (p != null && p.getOwner() == owner) {
+				return false;
+			}
+		}
+		if (board.getPromoteRow(owner.getFacing()) == row) return false;
+		return true;
 	}
 
 }

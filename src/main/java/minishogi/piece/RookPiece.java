@@ -45,4 +45,9 @@ public final class RookPiece extends AbstractPiece{
 			return MoveCheckUtils.rookPieceMoveCheck(startRow, startCol, endRow, endCol, board);
 		}
 	}
+
+	@Override
+	public boolean isLegalDrop(int row, int col, Board board) {
+		return true;
+	}
 }
