@@ -42,6 +42,10 @@ public final class Board {
 		return board[row][col];
 	}
 	
+	private void removePiece(int row, int col) {
+		board[row][col] = null;
+	}
+	
 	/**
 	 * Get the promote row number based on the facing of the piece
 	 * @param facing : UP or DOWN
@@ -57,6 +61,46 @@ public final class Board {
 		int row = addr2Row(address);
 		int col = addr2Col(address);
 		board[row][col] = p;
+		return true;
+	}
+	
+	void placePiece(Piece p, int row, int col) {
+		board[row][col] = p;
+	}
+	
+	boolean makeMove(String fromAddr, String toAddr, boolean promote, Player currentPlayer) {
+		//Invalid Address
+		if (!isValidAddr(fromAddr) || !isValidAddr(toAddr)) return false;
+		
+		int startRow = addr2Row(fromAddr);
+		int startCol = addr2Col(fromAddr);
+		int endRow = addr2Row(toAddr);
+		int endCol = addr2Col(toAddr);
+		
+		Piece p = getPiece(startRow, startCol);
+		if (p == null) return false;
+		if (p.getOwner() != currentPlayer) return false;
+		if (!p.isWithinMoveRange(startRow, startCol, endRow, endCol, this)) return false;
+		if (promote) {
+			if (!p.promote(endRow, this)) return false;
+		}
+		Piece pAtEndAddr = getPiece(endRow, endCol);
+		if (pAtEndAddr != null && pAtEndAddr.getOwner() == currentPlayer) return false;
+		
+		//Finish checking, make the move
+		if (pAtEndAddr != null) {
+			//Capture the piece
+			removePiece(endRow, endCol);
+			pAtEndAddr.capture(currentPlayer);
+			currentPlayer.addCapturedPiece(pAtEndAddr);
+		}
+		removePiece(startRow, startCol);
+		placePiece(p, endRow, endCol);
+		return true;
+	}
+	
+	boolean makeDrop(Piece p, String address, Player currentPlayer) {
+		//TODO : implement this
 		return true;
 	}
 }

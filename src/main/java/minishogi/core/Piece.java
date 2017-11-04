@@ -15,6 +15,18 @@ public interface Piece {
 	void capture(Player p);
 	
 	/**
+	 * Get the current owner of the piece
+	 * @return : the reference to the owner object
+	 */
+	Player getOwner();
+	
+	/**
+	 * Return the current symbol of the piece 
+	 * @return : the symbol
+	 */
+	char getSymbol();
+	
+	/**
 	 * promote the piece based on the Board and the row
 	 * the piece landed
 	 * @param endRow : the row the piece moves to

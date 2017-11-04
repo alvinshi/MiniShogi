@@ -18,19 +18,31 @@ public final class MiniShogiImpl implements MiniShogi{
 	private static final String GAME_INIT_FILE = "config/game/game.init";
 	private static final String PIECE_PACKAGE_PATH = "minishogi.piece.";
 	
+	private int turn;
 	private Queue<Player> playerQueue;
+	private Player currentPlayer;
 	private Board board;
+	
+	private void nextTurn() {
+		currentPlayer = playerQueue.poll();
+		playerQueue.add(currentPlayer);
+		turn++;
+	}
 	
 	@Override
 	public void newGame() throws FileNotFoundException, InstantiationException, 
 		IllegalAccessException, IllegalArgumentException, InvocationTargetException, 
 			NoSuchMethodException, SecurityException, ClassNotFoundException{
+		//Initialize the turn
+		turn = 0;
+		
 		//Initialize Players and the queue
 		playerQueue = new LinkedList<>();
 		Player upperPlayer = new Player(true);
 		Player lowerPlayer = new Player(false);
 		playerQueue.add(upperPlayer);
 		playerQueue.add(lowerPlayer);
+		nextTurn();
 		
 		//Initialize Pieces and Board
 		board = new Board();
@@ -51,5 +63,31 @@ public final class MiniShogiImpl implements MiniShogi{
 			board.placePiece(p, address);
 		}
 		sc.close();
+	}
+
+	@Override
+	public boolean move(String fromAddr, String toAddr, boolean promote) {
+		boolean legalMove = board.makeMove(fromAddr, toAddr, promote, currentPlayer);
+		if (legalMove) {
+			nextTurn();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean drop(char piece, String address) {
+		Piece p = currentPlayer.getPiece(piece);
+		if (p == null) return false;
+		boolean legalDrop = board.makeDrop(p, address, currentPlayer);
+		if (legalDrop) {
+			nextTurn();
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }

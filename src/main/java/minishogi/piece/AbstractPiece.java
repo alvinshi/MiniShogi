@@ -31,6 +31,16 @@ public abstract class AbstractPiece implements Piece{
 	}
 	
 	@Override
+	public final Player getOwner() {
+		return owner;
+	}
+	
+	@Override
+	public final char getSymbol() {
+		return symbol;
+	}
+	
+	@Override
 	public abstract boolean promote(int endRow, Board board);
 	
 	protected abstract void demote();
