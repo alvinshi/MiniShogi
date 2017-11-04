@@ -1,15 +1,15 @@
 package minishogi.core;
 
 /**
- * Represents a Rook in MiniShogi
+ * Represents a Silver General in MiniShogi
  * @author alvinshi
  *
  */
-final class RookPiece extends AbstractPiece{
-	private static final char DEFAULT_SYMBOL = 'R';
+final class SilverGeneralPiece extends AbstractPiece{
+	private static final char DEFAULT_SYMBOL = 'S';
 	private boolean promoted;
 
-	RookPiece(Player owner) {
+	SilverGeneralPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 		promoted = false;
 	}
@@ -30,12 +30,12 @@ final class RookPiece extends AbstractPiece{
 
 	@Override
 	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
-		if (promoted) {
-			return (MoveCheckUtils.kingPieceMoveCheck(startRow, startCol, endRow, endCol) ||
-					MoveCheckUtils.rookPieceMoveCheck(startRow, startCol, endRow, endCol, board));
+		if (!promoted) {
+			return MoveCheckUtils.silverGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 		}
 		else {
-			return MoveCheckUtils.rookPieceMoveCheck(startRow, startCol, endRow, endCol, board);
+			return MoveCheckUtils.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 		}
 	}
+
 }

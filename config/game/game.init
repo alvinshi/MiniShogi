@@ -1,0 +1,12 @@
+RookPiece UPPER a5
+BishopPiece  UPPER b5
+SilverGeneralPiece UPPER c5
+GoldGeneralPiece UPPER d5
+KingPiece UPPER e5
+PawnPiece UPPER e4
+RookPiece LOWER e1
+BishopPiece LOWER d1
+SilverGeneralPiece LOWER c1
+GoldGeneralPiece LOWER b1
+KingPiece LOWER a1
+PawnPiece LOWER a2

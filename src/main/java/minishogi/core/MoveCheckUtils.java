@@ -6,17 +6,13 @@ package minishogi.core;
  * @author alvinshi
  *
  */
-final class MoveCheckUtils {
-	private static final int PROMOTE_ROW_FOR_UPPER = 4;
-	private static final int PROMOTE_ROW_FOR_LOWER = 0;
-	
+final class MoveCheckUtils {	
 	private static boolean hasMoved(int startRow, int startCol, int endRow, int endCol) {
 		return  !(startRow == endRow && startCol == endCol);
 	}
 	
-	static boolean canPromote(int row, Facing facing) {
-		if (facing == Facing.DOWN) return row == PROMOTE_ROW_FOR_UPPER;
-		else return row == PROMOTE_ROW_FOR_LOWER;
+	static boolean canPromote(int row, Facing facing, Board board) {
+		return row == board.getPromoteRow(facing);
 	}
 	
 	static boolean kingPieceMoveCheck(int startRow, int startCol, int endRow, int endCol) {
@@ -58,5 +54,22 @@ final class MoveCheckUtils {
 		else if (deltaCol == 0 && (deltaRow == 1 || deltaRow == -1)) return true;
 		else if (facing == Facing.DOWN) return (deltaRow == 1 && (deltaCol == -1 || deltaCol == -1));
 		else return (deltaRow == -1 && (deltaCol == -1 || deltaCol == -1));
+	}
+	
+	static boolean silverGeneralPieceMoveCheck(int startRow, int startCol, int endRow, int endCol, Facing facing) {
+		if (!hasMoved(startRow, startCol, endRow, endCol)) return false;
+		int deltaRow = endRow - startRow;
+		int deltaCol = endCol - startCol;
+		if (Math.abs(deltaRow) == 1 && Math.abs(deltaCol) == 1) return true;
+		else if (facing == Facing.DOWN) return (deltaRow == 1 && deltaCol == 0);
+		else return (deltaRow == -1 && deltaCol == 0);
+	}
+	
+	static boolean pawnPieceMoveCheck(int startRow, int startCol, int endRow, int endCol, Facing facing) {
+		if (!hasMoved(startRow, startCol, endRow, endCol)) return false;
+		int deltaRow = endRow - startRow;
+		int deltaCol = endCol - startCol;
+		if (facing == Facing.DOWN) return (deltaRow == 1 && deltaCol == 0);
+		else return (deltaRow == -1 && deltaCol == 0);
 	}
 }

@@ -5,7 +5,7 @@ package minishogi.core;
  * @author alvinshi
  *
  */
-final class GoldGeneralPiece extends Piece{
+final class GoldGeneralPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'G';
 
 	protected GoldGeneralPiece(Player owner) {
@@ -13,17 +13,16 @@ final class GoldGeneralPiece extends Piece{
 	}
 
 	@Override
-	boolean promote(int endRow) {
+	public boolean promote(int endRow, Board board) {
 		return false;
 	}
 
 	@Override
-	boolean demote() {
-		return false;
+	protected void demote() {
 	}
 
 	@Override
-	boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
+	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
 		return MoveCheckUtils.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 	}
 }

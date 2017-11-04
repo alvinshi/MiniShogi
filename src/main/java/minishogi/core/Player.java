@@ -10,7 +10,7 @@ import java.util.List;
  */
 final class Player {
 	private final boolean isUpperPlayer;
-	private final List<Piece> capturedPieces;
+	private final List<AbstractPiece> capturedPieces;
 	private final Facing facing;
 	
 	Player(boolean isUpperPlayer) {
@@ -33,7 +33,7 @@ final class Player {
 		else return Character.toLowerCase(originalSymbol);
 	}
 	
-	void addCapturedPiece(Piece e) {
+	void addCapturedPiece(AbstractPiece e) {
 		e.capture(this);
 		capturedPieces.add(e);
 	}

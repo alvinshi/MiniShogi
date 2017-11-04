@@ -5,18 +5,18 @@ package minishogi.core;
  * @author alvinshi
  *
  */
-final class BishopPiece extends Piece{
+final class BishopPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'B';
 	private boolean promoted;
 
-	protected BishopPiece(Player owner) {
+	BishopPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 		promoted = false;
 	}
 
 	@Override
-	boolean promote(int endRow) {
-		if (!MoveCheckUtils.canPromote(endRow, facing)) {
+	public boolean promote(int endRow, Board board ) {
+		if (!MoveCheckUtils.canPromote(endRow, facing, board)) {
 			return false;
 		}
 		promoted = true;
@@ -24,13 +24,12 @@ final class BishopPiece extends Piece{
 	}
 
 	@Override
-	boolean demote() {
+	protected void demote() {
 		promoted = false;
-		return true;
 	}
 
 	@Override
-	boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
+	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
 		if (promoted) {
 			return (MoveCheckUtils.kingPieceMoveCheck(startRow, startCol, endRow, endCol) ||
 					MoveCheckUtils.bishopPieceMoveCheck(startRow, startCol, endRow, endCol, board));
