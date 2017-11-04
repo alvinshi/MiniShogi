@@ -1,14 +1,21 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Player;
 
 /**
  * Represents a Gold General in MiniShogi
  * @author alvinshi
  *
  */
-final class GoldGeneralPiece extends AbstractPiece{
+public final class GoldGeneralPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'G';
 
-	protected GoldGeneralPiece(Player owner) {
+	/**
+	 * Gold General Piece Constructor
+	 * @param owner : the owner of the new piece
+	 */
+	public GoldGeneralPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 	}
 

@@ -1,15 +1,22 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Player;
 
 /**
  * Represents a Silver General in MiniShogi
  * @author alvinshi
  *
  */
-final class SilverGeneralPiece extends AbstractPiece{
+public final class SilverGeneralPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'S';
 	private boolean promoted;
 
-	SilverGeneralPiece(Player owner) {
+	/**
+	 * Silver General Piece Constructor 
+	 * @param owner : the owner of the piece
+	 */
+	public SilverGeneralPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 		promoted = false;
 	}

@@ -2,7 +2,7 @@ package minishogi.core;
 import java.io.*;
 import java.util.*;
 public class Utils {
-
+	//CHECKSTYLE:OFF
     static class InitialPosition {
         String piece;
         String position;
@@ -119,4 +119,5 @@ public class Utils {
 
         return new TestCase(initialPieces, upperCaptures, lowerCaptures, moves);
     }
+  //CHECKSTYLE:ON
 }

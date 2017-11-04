@@ -16,7 +16,7 @@ import minishogi.game.MiniShogi;
  */
 public final class MiniShogiImpl implements MiniShogi{
 	private static final String GAME_INIT_FILE = "config/game/game.init";
-	private static final String PACKAGE_PATH = "minishogi.core.";
+	private static final String PIECE_PACKAGE_PATH = "minishogi.piece.";
 	
 	private Queue<Player> playerQueue;
 	private Board board;
@@ -45,7 +45,7 @@ public final class MiniShogiImpl implements MiniShogi{
 			if (isUpper) {
 				owner = upperPlayer;
 			}
-			Piece p = (Piece)Class.forName(PACKAGE_PATH + line[0])
+			Piece p = (Piece)Class.forName(PIECE_PACKAGE_PATH + line[0])
 						.getDeclaredConstructor(minishogi.core.Player.class)
 							.newInstance(owner);
 			board.placePiece(p, address);

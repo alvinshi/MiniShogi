@@ -1,15 +1,22 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Player;
 
 /**
  * Represents a Rook in MiniShogi
  * @author alvinshi
  *
  */
-final class RookPiece extends AbstractPiece{
+public final class RookPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'R';
 	private boolean promoted;
 
-	RookPiece(Player owner) {
+	/**
+	 * Rook Piece Constructor
+	 * @param owner : the owner of the new piece
+	 */
+	public RookPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 		promoted = false;
 	}

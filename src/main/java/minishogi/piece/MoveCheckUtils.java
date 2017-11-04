@@ -1,4 +1,7 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Facing;
 
 /**
  * utility functions to validate the move. The intention of this util class is

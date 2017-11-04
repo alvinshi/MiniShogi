@@ -1,15 +1,22 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Player;
 
 /**
  * Represents a Bishop in MiniShogi
  * @author alvinshi
  *
  */
-final class BishopPiece extends AbstractPiece{
+public final class BishopPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'B';
 	private boolean promoted;
 
-	BishopPiece(Player owner) {
+	/**
+	 * Bishop Piece Constructor
+	 * @param owner : the owner of the piece
+	 */
+	public BishopPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 		promoted = false;
 	}

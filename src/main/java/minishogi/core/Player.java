@@ -8,9 +8,9 @@ import java.util.List;
  * @author alvinshi
  *
  */
-final class Player {
+public final class Player {
 	private final boolean isUpperPlayer;
-	private final List<AbstractPiece> capturedPieces;
+	private final List<Piece> capturedPieces;
 	private final Facing facing;
 	
 	Player(boolean isUpperPlayer) {
@@ -24,16 +24,27 @@ final class Player {
 		}
 	}
 	
-	Facing getFacing() {
+	/**
+	 * return the facing of the current player's piece
+	 * @return : Facing.UP if one is not a upper player,
+	 *           Facing.DOWN otherwise
+	 */
+	public Facing getFacing() {
 		return facing;
 	}
 	
-	char getSymbol(char originalSymbol) {
+	/**
+	 * process the symbol of a piece based on the player
+	 * @param originalSymbol : the orginal symbol of the piece
+	 * @return : uppercase if one is upper player
+	 *           lowercase otherwise
+	 */
+	public char getSymbol(char originalSymbol) {
 		if (isUpperPlayer) return Character.toUpperCase(originalSymbol);
 		else return Character.toLowerCase(originalSymbol);
 	}
 	
-	void addCapturedPiece(AbstractPiece e) {
+	void addCapturedPiece(Piece e) {
 		e.capture(this);
 		capturedPieces.add(e);
 	}

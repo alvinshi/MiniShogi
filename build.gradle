@@ -24,7 +24,7 @@ dependencies {
 
 checkstyle {
   ignoreFailures = true
-  toolVersion = "6.7"
+  toolVersion = "8.0"
   sourceSets = [sourceSets.main]
 }
 

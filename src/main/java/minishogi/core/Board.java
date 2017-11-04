@@ -5,7 +5,7 @@ package minishogi.core;
  * @author alvinshi
  *
  */
-final class Board {
+public final class Board {
 	private static final int BOARD_SIZE = 5;
 	private static final int UP_PROMOTION_ROW = 0;
 	private static final int DOWN_PROMOTION_ROW = BOARD_SIZE - 1;
@@ -31,11 +31,23 @@ final class Board {
 		board = new Piece[BOARD_SIZE][BOARD_SIZE];
 	}
 	
-	Piece getPiece(int row, int col) {
+	/**
+	 * Get the Piece on the specified location
+	 * @param row : row number (1~5)
+	 * @param col : col number (a~e)
+	 * @return return the piece on the request location,
+	 *         return null if not
+	 */
+	public Piece getPiece(int row, int col) {
 		return board[row][col];
 	}
 	
-	int getPromoteRow(Facing facing) {
+	/**
+	 * Get the promote row number based on the facing of the piece
+	 * @param facing : UP or DOWN
+	 * @return : the row index of the promotion row
+	 */
+	public int getPromoteRow(Facing facing) {
 		if (facing == Facing.UP) return UP_PROMOTION_ROW;
 		else return DOWN_PROMOTION_ROW;
 	}

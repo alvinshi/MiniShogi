@@ -1,15 +1,22 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Player;
 
 /**
  * Represents a pawn in MiniShogi
  * @author alvinshi
  *
  */
-final class PawnPiece extends AbstractPiece{
+public final class PawnPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'P';
 	private boolean promoted;
 
-	PawnPiece(Player owner) {
+	/**
+	 * Pawn Piece Constructor 
+	 * @param owner : the owner of the piece
+	 */
+	public PawnPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 		promoted = false;
 	}

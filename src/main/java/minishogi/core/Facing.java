@@ -6,6 +6,6 @@ package minishogi.core;
  * @author alvinshi
  *
  */
-enum Facing {
+public enum Facing {
 	UP, DOWN;
 }

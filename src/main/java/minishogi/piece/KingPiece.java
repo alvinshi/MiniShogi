@@ -1,15 +1,21 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Player;
 
 /**
  * Represents a King in MiniShogi
  * @author alvinshi
  *
  */
-final class KingPiece extends AbstractPiece{
+public final class KingPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'K';
 
-	
-	KingPiece(Player owner) {
+	/**
+	 * King Piece Constructor
+	 * @param owner : the owner of the piece
+	 */
+	public KingPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner);
 	}
 	

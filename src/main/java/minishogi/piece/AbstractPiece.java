@@ -1,11 +1,16 @@
-package minishogi.core;
+package minishogi.piece;
+
+import minishogi.core.Board;
+import minishogi.core.Facing;
+import minishogi.core.Piece;
+import minishogi.core.Player;
 
 /**
  * Abstract class representing the basic concept of a piece in MiniShogi 
  * @author alvinshi
  *
  */
-abstract class AbstractPiece implements Piece{
+public abstract class AbstractPiece implements Piece{
 	private char symbol;
 	private Player owner;
 	protected boolean promoted;
@@ -16,7 +21,8 @@ abstract class AbstractPiece implements Piece{
 		this.owner = owner;
 		this.facing = owner.getFacing();
 	}
-		
+	
+	@Override
 	public final void capture(Player p) {
 		owner = p;
 		symbol = p.getSymbol(symbol);
@@ -24,10 +30,12 @@ abstract class AbstractPiece implements Piece{
 		demote();
 	}
 	
+	@Override
 	public abstract boolean promote(int endRow, Board board);
 	
 	protected abstract void demote();
 	
+	@Override
 	public abstract boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board);
 	
 	@Override
