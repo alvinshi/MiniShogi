@@ -111,6 +111,7 @@ public final class Board {
 		if (!isValidAddr(address)) return false;
 		int row = addr2Row(address);
 		int col = addr2Col(address);
+		if (getPiece(row, col) != null) return false;
 		if (!p.isLegalDrop(row, col, this)) return false;
 		//TODO : check checkmate
 		return true;
