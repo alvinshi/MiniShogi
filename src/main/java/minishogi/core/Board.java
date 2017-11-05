@@ -1,5 +1,10 @@
 package minishogi.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import minishogi.piece.KingPiece;
+
 /**
  * Represents a board in the MiniShogi
  * @author alvinshi
@@ -12,6 +17,7 @@ public final class Board {
 	private static final String ADDRESS_PATTERN = "[a-e][1-5]";
 	
 	private final Piece[][] board;
+	private final Map<Player, Map<String, Integer>> kingLocations;
 	
 	private static int addr2Row(String address) {
 		int i = Integer.valueOf(address.substring(1,2));
@@ -29,6 +35,7 @@ public final class Board {
 	
 	Board() {
 		board = new Piece[BOARD_SIZE][BOARD_SIZE];
+		kingLocations = new HashMap<>();
 	}
 	
 	/**
@@ -50,10 +57,6 @@ public final class Board {
 		return board[row][col];
 	}
 	
-	private void removePiece(int row, int col) {
-		board[row][col] = null;
-	}
-	
 	/**
 	 * Get the promote row number based on the facing of the piece
 	 * @param facing : UP or DOWN
@@ -64,15 +67,34 @@ public final class Board {
 		else return DOWN_PROMOTION_ROW;
 	}
 	
+	private void removePiece(int row, int col) {
+		board[row][col] = null;
+	}
+		
 	boolean placePiece(Piece p, String address) {
 		if (!isValidAddr(address)) return false;
 		int row = addr2Row(address);
 		int col = addr2Col(address);
-		board[row][col] = p;
+		placePiece(p, row, col);
 		return true;
 	}
 	
+	private void updateKingLocation(Piece p, int row, int col) {
+		Player owner = p.getOwner();
+		Map<String, Integer> loc;
+		if (kingLocations.containsKey(owner)) {
+			loc = kingLocations.get(owner);
+		}
+		else {
+			loc = new HashMap<>();
+		}
+		loc.put("row", row);
+		loc.put("col", col);
+		kingLocations.put(owner, loc);
+	}
+	
 	void placePiece(Piece p, int row, int col) {
+		if (p instanceof KingPiece) updateKingLocation(p, row, col);
 		board[row][col] = p;
 	}
 	
@@ -113,7 +135,45 @@ public final class Board {
 		int col = addr2Col(address);
 		if (getPiece(row, col) != null) return false;
 		if (!p.isLegalDrop(row, col, this)) return false;
-		//TODO : check checkmate
 		return true;
+	}
+	
+	/**
+	 * Get the location of the opponent's king on the board
+	 * @param currentPlayer : the current player
+	 * @return : a map of row to row number and col to column number
+	 */
+	public Map<String, Integer> getOpponentKingLocation(Player currentPlayer) {
+		for (Map.Entry<Player, Map<String, Integer>> e : kingLocations.entrySet()) {
+			if (e.getKey() != currentPlayer) return e.getValue();
+		}
+		return null;
+	}
+	
+	/**
+	 * Check is the row and column are in bound
+	 * @param row : row number
+	 * @param col : column number
+	 * @return : true if is in bound
+	 */
+	public boolean inBound(int row, int col) {
+		if (row < 0 || row >= BOARD_SIZE) return false;
+		if (col < 0 || col >= BOARD_SIZE) return false;
+		return true;
+	}
+	
+	private boolean isCheck(Player currentPlayer) {
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			for (int col = 0; col < BOARD_SIZE; col++) {
+				Piece p = board[row][col];
+				if (p != null && p.getOwner() == currentPlayer) {
+					Map<String, Integer> kingLoc = getOpponentKingLocation(currentPlayer);
+					if (p.isWithinMoveRange(row, col, kingLoc.get("row"), kingLoc.get("col"), this)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

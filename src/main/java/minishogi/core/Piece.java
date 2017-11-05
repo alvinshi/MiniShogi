@@ -1,5 +1,9 @@
 package minishogi.core;
 
+import java.util.Set;
+
+import minishogi.piece.Move;
+
 /**
  * Represents a piece in MiniShogi
  * @author alvinshi
@@ -54,4 +58,13 @@ public interface Piece {
 	 * @return : true if the drop obeys the rule sets by the piece identity
 	 */
 	boolean isLegalDrop(int row, int col, Board board);
+
+	/**
+	 * Return all possible moves of the piece based on the location and the board status
+	 * @param startRow : start row number
+	 * @param startCol : start column number
+	 * @param board : the board
+	 * @return : a set of all possible moves
+	 */
+	Set<Move> getAllValidMoves(int startRow, int startCol, Board board);
 }

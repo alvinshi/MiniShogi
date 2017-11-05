@@ -16,7 +16,7 @@ public final class GoldGeneralPiece extends AbstractPiece{
 	 * @param owner : the owner of the new piece
 	 */
 	public GoldGeneralPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner);
+		super(DEFAULT_SYMBOL, owner, Move.getGoldGeneralMoves(owner.getFacing()));
 	}
 
 	@Override
@@ -26,11 +26,6 @@ public final class GoldGeneralPiece extends AbstractPiece{
 
 	@Override
 	protected void demote() {
-	}
-
-	@Override
-	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
-		return MoveCheckUtils.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 	}
 
 	@Override

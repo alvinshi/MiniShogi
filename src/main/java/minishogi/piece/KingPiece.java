@@ -16,7 +16,7 @@ public final class KingPiece extends AbstractPiece{
 	 * @param owner : the owner of the piece
 	 */
 	public KingPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner);
+		super(DEFAULT_SYMBOL, owner, Move.getKingMoves());
 	}
 	
 	@Override
@@ -26,11 +26,6 @@ public final class KingPiece extends AbstractPiece{
 
 	@Override
 	protected void demote() {
-	}
-
-	@Override
-	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
-		return MoveCheckUtils.kingPieceMoveCheck(startRow, startCol, endRow, endCol);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package minishogi.piece;
 
+import java.util.Map;
+
 import minishogi.core.Board;
 import minishogi.core.Piece;
 import minishogi.core.Player;
@@ -18,38 +20,24 @@ public final class PawnPiece extends AbstractPiece{
 	 * @param owner : the owner of the piece
 	 */
 	public PawnPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner);
+		super(DEFAULT_SYMBOL, owner, Move.getPawnMoves(owner.getFacing()));
 		promoted = false;
 	}
 
 	@Override
 	public boolean promote(int endRow, Board board) {
-		if (!MoveCheckUtils.canPromote(endRow, facing, board)) {
+		if (!canPromote(endRow, board)) {
 			return false;
 		}
+		setMoves(Move.getGoldGeneralMoves(facing));
 		promoted = true;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
+		setMoves(Move.getPawnMoves(facing));
 		promoted = false;
-	}
-
-	@Override
-	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
-		boolean isLegalMove = false;
-		if (!promoted) {
-			isLegalMove = MoveCheckUtils.pawnPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
-		}
-		else {
-			isLegalMove = MoveCheckUtils.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
-		}
-		// Pawn will be promoted automatically
-		if (isLegalMove && (board.getPromoteRow(facing) == endRow)) {
-			promoted = true;
-		}
-		return isLegalMove;
 	}
 
 	@Override
@@ -61,7 +49,11 @@ public final class PawnPiece extends AbstractPiece{
 				return false;
 			}
 		}
+		//Cannot be dropped into the promotion zone
 		if (board.getPromoteRow(owner.getFacing()) == row) return false;
+		//Cannot lead to an immediate check
+		Map<String, Integer> kingLocation = board.getOpponentKingLocation(owner);
+		if (isWithinMoveRange(row, col, kingLocation.get("row"), kingLocation.get("col"), board)) return false;
 		return true;
 	}
 
