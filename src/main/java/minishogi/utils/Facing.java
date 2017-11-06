@@ -1,4 +1,4 @@
-package minishogi.core;
+package minishogi.utils;
 
 /**
  * Constants representing the general direction a player should move the piece

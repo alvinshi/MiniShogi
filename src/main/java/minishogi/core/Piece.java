@@ -2,7 +2,7 @@ package minishogi.core;
 
 import java.util.Set;
 
-import minishogi.piece.Move;
+import minishogi.utils.PieceMove;
 
 /**
  * Represents a piece in MiniShogi
@@ -66,5 +66,5 @@ public interface Piece {
 	 * @param board : the board
 	 * @return : a set of all possible moves
 	 */
-	Set<Move> getAllValidMoves(int startRow, int startCol, Board board);
+	Set<PieceMove> getAllValidMoves(int startRow, int startCol, Board board);
 }

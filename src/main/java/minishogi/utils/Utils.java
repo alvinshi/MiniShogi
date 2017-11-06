@@ -1,13 +1,47 @@
-package minishogi.core;
-import java.io.*;
-import java.util.*;
+package minishogi.utils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import minishogi.core.Piece;
+
+/**
+ * Helper Functions which mainly deal with testing and output translation
+ * @author alvinshi, box
+ *
+ */
 public class Utils {
-	//CHECKSTYLE:OFF
+	/**
+	 * Stringify a move based on from and to addresses
+	 * @param from : from address
+	 * @param to : to address
+	 * @return : string representation of a move
+	 */
+	public static String stringifyMove(String from, String to) {
+		return "move " + from + " " + to;
+	}
+	
+	/**
+	 * Stringify a drop based on the piece and the to address
+	 * @param p : the piece to be dropped
+	 * @param to : to address
+	 * @return : string representation of a drop
+	 */
+	public static String stringifyDrop(Piece p, String to) {
+		return "drop " + Character.toLowerCase(p.getSymbol()) + " " + to;
+	}
+	
+	/**
+	 * initial position of a piece
+	 */
     static class InitialPosition {
         String piece;
         String position;
         
-        public InitialPosition(String pc, String pos) {
+        InitialPosition(String pc, String pos) {
             piece = pc;
             position = pos;
         }
@@ -17,6 +51,9 @@ public class Utils {
         }
     }
 
+    /**
+     * a test case
+     */
     static class TestCase {
 
         List<InitialPosition> initialPieces;
@@ -24,7 +61,7 @@ public class Utils {
         List<String> lowerCaptures;
         List<String> moves;
 
-        public TestCase(List<InitialPosition> ip, List<String> uc, List<String> lc, List<String> m) {
+        TestCase(List<InitialPosition> ip, List<String> uc, List<String> lc, List<String> m) {
             initialPieces = ip;
             upperCaptures = uc;
             lowerCaptures = lc;
@@ -62,6 +99,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Stringify a board 
+     * @param board : the board
+     * @return : a string representation of the current board
+     */
     public static String stringifyBoard(String[][] board) {
 
         String str = "";
@@ -89,11 +131,19 @@ public class Utils {
                 return " " + sq + "|";
             case 2:
                 return sq + "|";
+		default:
+			break;
         }
 
         throw new IllegalArgumentException("Board must be an array of strings like \"\", \"P\", or \"+P\"");
     }
 
+    /**
+     * parse a test case into a test case object
+     * @param path : file path of the test case
+     * @return : a test case object
+     * @throws Exception : error
+     */
     public static TestCase parseTestCase(String path) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(path));
         String line = br.readLine().trim();
@@ -119,5 +169,4 @@ public class Utils {
 
         return new TestCase(initialPieces, upperCaptures, lowerCaptures, moves);
     }
-  //CHECKSTYLE:ON
 }

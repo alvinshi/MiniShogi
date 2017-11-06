@@ -4,6 +4,7 @@ import java.util.Set;
 
 import minishogi.core.Board;
 import minishogi.core.Player;
+import minishogi.utils.PieceMove;
 
 /**
  * Represents a Bishop in MiniShogi
@@ -12,15 +13,13 @@ import minishogi.core.Player;
  */
 public final class BishopPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'B';
-	private boolean promoted;
 
 	/**
 	 * Bishop Piece Constructor
 	 * @param owner : the owner of the piece
 	 */
 	public BishopPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, Move.getBishopMoves());
-		promoted = false;
+		super(DEFAULT_SYMBOL, owner, PieceMove.getBishopMoves());
 	}
 
 	@Override
@@ -28,17 +27,15 @@ public final class BishopPiece extends AbstractPiece{
 		if (!canPromote(endRow, board)) {
 			return false;
 		}
-		Set<Move> moves = Move.getBishopMoves();
-		moves.addAll(Move.getKingMoves());
+		Set<PieceMove> moves = PieceMove.getBishopMoves();
+		moves.addAll(PieceMove.getKingMoves());
 		setMoves(moves);
-		promoted = true;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
-		setMoves(Move.getBishopMoves());
-		promoted = false;
+		setMoves(PieceMove.getBishopMoves());
 	}
 
 	@Override

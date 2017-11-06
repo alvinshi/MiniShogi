@@ -17,8 +17,10 @@ import minishogi.game.MiniShogi;
 public final class MiniShogiImpl implements MiniShogi{
 	private static final String GAME_INIT_FILE = "config/game/game.init";
 	private static final String PIECE_PACKAGE_PATH = "minishogi.piece.";
+	private static final int MOVE_LIMIT = 200;
 	
 	private int turn;
+	private boolean gameOver;
 	private Queue<Player> playerQueue;
 	private Player currentPlayer;
 	private Board board;
@@ -27,6 +29,9 @@ public final class MiniShogiImpl implements MiniShogi{
 		currentPlayer = playerQueue.poll();
 		playerQueue.add(currentPlayer);
 		turn++;
+		if (turn >= MOVE_LIMIT) {
+			gameOver = true;
+		}
 	}
 	
 	@Override
@@ -35,6 +40,7 @@ public final class MiniShogiImpl implements MiniShogi{
 			NoSuchMethodException, SecurityException, ClassNotFoundException{
 		//Initialize the turn
 		turn = 0;
+		gameOver = false;
 		
 		//Initialize Players and the queue
 		playerQueue = new LinkedList<>();
@@ -67,26 +73,33 @@ public final class MiniShogiImpl implements MiniShogi{
 
 	@Override
 	public boolean move(String fromAddr, String toAddr, boolean promote) {
+		if (gameOver) return false;
 		boolean legalMove = board.makeMove(fromAddr, toAddr, promote, currentPlayer);
 		if (legalMove) {
 			nextTurn();
 			return true;
 		}
 		else {
+			gameOver = true;
 			return false;
 		}
 	}
 
 	@Override
 	public boolean drop(char piece, String address) {
+		if (gameOver) return false;
 		Piece p = currentPlayer.getPiece(piece);
-		if (p == null) return false;
+		if (p == null) {
+			gameOver = true;
+			return false;
+		}
 		boolean legalDrop = board.makeDrop(p, address, currentPlayer);
 		if (legalDrop) {
 			nextTurn();
 			return true;
 		}
 		else {
+			gameOver = true;
 			return false;
 		}
 	}

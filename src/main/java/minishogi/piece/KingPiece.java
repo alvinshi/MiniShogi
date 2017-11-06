@@ -2,6 +2,7 @@ package minishogi.piece;
 
 import minishogi.core.Board;
 import minishogi.core.Player;
+import minishogi.utils.PieceMove;
 
 /**
  * Represents a King in MiniShogi
@@ -16,7 +17,7 @@ public final class KingPiece extends AbstractPiece{
 	 * @param owner : the owner of the piece
 	 */
 	public KingPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, Move.getKingMoves());
+		super(DEFAULT_SYMBOL, owner, PieceMove.getKingMoves());
 	}
 	
 	@Override

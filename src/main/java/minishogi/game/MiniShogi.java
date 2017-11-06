@@ -9,7 +9,7 @@ public interface MiniShogi {
 	
 	/**
 	 * Start a new game
-	 * @throws Exception : Fail to start a game due to misconfiguration
+	 * @throws Exception : Fail to start a game due to configuration error
 	 */
 	void newGame() throws Exception;
 	

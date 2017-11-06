@@ -2,6 +2,7 @@ package minishogi.piece;
 
 import minishogi.core.Board;
 import minishogi.core.Player;
+import minishogi.utils.PieceMove;
 
 /**
  * Represents a Gold General in MiniShogi
@@ -16,7 +17,7 @@ public final class GoldGeneralPiece extends AbstractPiece{
 	 * @param owner : the owner of the new piece
 	 */
 	public GoldGeneralPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, Move.getGoldGeneralMoves(owner.getFacing()));
+		super(DEFAULT_SYMBOL, owner, PieceMove.getGoldGeneralMoves(owner.getFacing()));
 	}
 
 	@Override

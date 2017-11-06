@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import minishogi.utils.Facing;
+
 /**
  * Represents a single player in the MiniShogi
  * @author alvinshi
@@ -61,7 +63,7 @@ public final class Player {
 	Piece getPiece(char symbol) {
 		if (capturedPieces.containsKey(symbol)) {
 			try {
-				Piece p = capturedPieces.get(symbol).get(0);
+				Piece p = capturedPieces.get(symbol).remove(0);
 				return p;
 			} catch (IndexOutOfBoundsException e) {
 				return null;
@@ -70,5 +72,9 @@ public final class Player {
 		else {
 			return null;
 		}
+	}
+	
+	Map<Character, List<Piece>> getAllCapturedPieces() {
+		return capturedPieces;
 	}
 }

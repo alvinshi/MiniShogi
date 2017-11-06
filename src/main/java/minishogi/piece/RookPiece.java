@@ -4,6 +4,7 @@ import java.util.Set;
 
 import minishogi.core.Board;
 import minishogi.core.Player;
+import minishogi.utils.PieceMove;
 
 /**
  * Represents a Rook in MiniShogi
@@ -12,15 +13,13 @@ import minishogi.core.Player;
  */
 public final class RookPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'R';
-	private boolean promoted;
 
 	/**
 	 * Rook Piece Constructor
 	 * @param owner : the owner of the new piece
 	 */
 	public RookPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, Move.getRookMoves());
-		promoted = false;
+		super(DEFAULT_SYMBOL, owner, PieceMove.getRookMoves());
 	}
 
 	@Override
@@ -28,17 +27,15 @@ public final class RookPiece extends AbstractPiece{
 		if (!canPromote(endRow, board)) {
 			return false;
 		}
-		Set<Move> moves = Move.getRookMoves();
-		moves.addAll(Move.getKingMoves());
+		Set<PieceMove> moves = PieceMove.getRookMoves();
+		moves.addAll(PieceMove.getKingMoves());
 		setMoves(moves);
-		promoted = true;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
-		setMoves(Move.getRookMoves());
-		promoted = false;
+		setMoves(PieceMove.getRookMoves());
 	}
 
 	@Override

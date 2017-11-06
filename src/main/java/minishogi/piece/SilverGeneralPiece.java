@@ -4,6 +4,7 @@ import java.util.Set;
 
 import minishogi.core.Board;
 import minishogi.core.Player;
+import minishogi.utils.PieceMove;
 
 /**
  * Represents a Silver General in MiniShogi
@@ -12,15 +13,13 @@ import minishogi.core.Player;
  */
 public final class SilverGeneralPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'S';
-	private boolean promoted;
 
 	/**
 	 * Silver General Piece Constructor 
 	 * @param owner : the owner of the piece
 	 */
 	public SilverGeneralPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, Move.getSilverGeneralMoves(owner.getFacing()));
-		promoted = false;
+		super(DEFAULT_SYMBOL, owner, PieceMove.getSilverGeneralMoves(owner.getFacing()));
 	}
 
 	@Override
@@ -28,17 +27,15 @@ public final class SilverGeneralPiece extends AbstractPiece{
 		if (!canPromote(endRow, board)) {
 			return false;
 		}
-		Set<Move> moves = Move.getSilverGeneralMoves(facing);
-		moves.addAll(Move.getGoldGeneralMoves(facing));
+		Set<PieceMove> moves = PieceMove.getSilverGeneralMoves(facing);
+		moves.addAll(PieceMove.getGoldGeneralMoves(facing));
 		setMoves(moves);
-		promoted = true;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
-		setMoves(Move.getSilverGeneralMoves(facing));
-		promoted = false;
+		setMoves(PieceMove.getSilverGeneralMoves(facing));
 	}
 
 	@Override

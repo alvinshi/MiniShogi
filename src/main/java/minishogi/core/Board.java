@@ -1,9 +1,14 @@
 package minishogi.core;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import minishogi.piece.KingPiece;
+import minishogi.utils.Facing;
+import minishogi.utils.PieceMove;
+import minishogi.utils.Utils;
 
 /**
  * Represents a board in the MiniShogi
@@ -27,6 +32,12 @@ public final class Board {
 	private static int addr2Col(String address) {
 		char c = address.charAt(0);
 		return (int)c - (int)'a';
+	}
+	
+	private static String index2addr(int row, int col) {
+		char a = (char)(((int)'a') + col);
+		int b = BOARD_SIZE - row;
+		return a + String.valueOf(b);
 	}
 	
 	private static boolean isValidAddr(String address) {
@@ -67,8 +78,24 @@ public final class Board {
 		else return DOWN_PROMOTION_ROW;
 	}
 	
-	private void removePiece(int row, int col) {
+	/**
+	 * Remove the piece at the specified address
+	 * @param row : row index
+	 * @param col : column index
+	 */
+	public void removePiece(int row, int col) {
 		board[row][col] = null;
+	}
+	
+	/**
+	 * place a piece on the board "without checks"
+	 * @param p : the piece to be placed
+	 * @param row : row index to place
+	 * @param col : column index to place
+	 */
+	public void placePiece(Piece p, int row, int col) {
+		if (p instanceof KingPiece) updateKingLocation(p, row, col);
+		board[row][col] = p;
 	}
 		
 	boolean placePiece(Piece p, String address) {
@@ -92,10 +119,18 @@ public final class Board {
 		loc.put("col", col);
 		kingLocations.put(owner, loc);
 	}
-	
-	void placePiece(Piece p, int row, int col) {
-		if (p instanceof KingPiece) updateKingLocation(p, row, col);
-		board[row][col] = p;
+		
+	boolean isValidMove(int startRow, int startCol, int endRow, int endCol, boolean promote, Player currentPlayer) {
+		Piece p = getPiece(startRow, startCol);
+		if (p == null) return false;
+		if (p.getOwner() != currentPlayer) return false;
+		if (!p.isWithinMoveRange(startRow, startCol, endRow, endCol, this)) return false;
+		if (promote) {
+			if (!p.promote(endRow, this)) return false;
+		}
+		Piece pAtEndAddr = getPiece(endRow, endCol);
+		if (pAtEndAddr != null && pAtEndAddr.getOwner() == currentPlayer) return false;
+		return true;
 	}
 	
 	boolean makeMove(String fromAddr, String toAddr, boolean promote, Player currentPlayer) {
@@ -107,17 +142,13 @@ public final class Board {
 		int endRow = addr2Row(toAddr);
 		int endCol = addr2Col(toAddr);
 		
-		Piece p = getPiece(startRow, startCol);
-		if (p == null) return false;
-		if (p.getOwner() != currentPlayer) return false;
-		if (!p.isWithinMoveRange(startRow, startCol, endRow, endCol, this)) return false;
-		if (promote) {
-			if (!p.promote(endRow, this)) return false;
+		if (!isValidMove(startRow, startCol, endRow, endCol, promote, currentPlayer)) {
+			return false;
 		}
-		Piece pAtEndAddr = getPiece(endRow, endCol);
-		if (pAtEndAddr != null && pAtEndAddr.getOwner() == currentPlayer) return false;
 		
 		//Finish checking, make the move
+		Piece p = getPiece(startRow, startCol);
+		Piece pAtEndAddr = getPiece(endRow, endCol);
 		if (pAtEndAddr != null) {
 			//Capture the piece
 			removePiece(endRow, endCol);
@@ -138,16 +169,20 @@ public final class Board {
 		return true;
 	}
 	
+	private Player getOpponent(Player currentPlayer) {
+		for (Map.Entry<Player, Map<String, Integer>> e : kingLocations.entrySet()) {
+			if (e.getKey() != currentPlayer) return e.getKey();
+		}
+		return null;
+	}
+	
 	/**
 	 * Get the location of the opponent's king on the board
 	 * @param currentPlayer : the current player
 	 * @return : a map of row to row number and col to column number
 	 */
 	public Map<String, Integer> getOpponentKingLocation(Player currentPlayer) {
-		for (Map.Entry<Player, Map<String, Integer>> e : kingLocations.entrySet()) {
-			if (e.getKey() != currentPlayer) return e.getValue();
-		}
-		return null;
+		return kingLocations.get(getOpponent(currentPlayer));
 	}
 	
 	/**
@@ -175,5 +210,85 @@ public final class Board {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Check if it is checkMate in the currentPlayer's turn
+	 * @param currentPlayer : the player who checks
+	 * @return : true if it is a checkMate
+	 */
+	public boolean isCheckMate(Player currentPlayer) {
+		if (!isCheck(currentPlayer)) return false;
+		Player opponent = getOpponent(currentPlayer);
+		List<String> strategies = unCheckStrategies(opponent);
+		return strategies.isEmpty();
+	}
+	
+	private List<String> unCheckStrategies(Player currentPlayer) {
+		List<String> strategies = new LinkedList<>();
+		//Try all moves
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			for (int col = 0; col < BOARD_SIZE; col++) {
+				Piece p = board[row][col];
+				if (p != null && p.getOwner() == currentPlayer) {
+					for (PieceMove m : p.getAllValidMoves(row, col, this)) {
+						int endRow = row + m.getDeltaRow();
+						int endCol = col + m.getDeltaCol();
+						if (canUncheckMove(row, col, endRow, endCol, currentPlayer)) {
+							String from  = index2addr(row, col);
+							String to = index2addr(endRow, endCol);
+							strategies.add(Utils.stringifyMove(from, to));
+						}
+					}
+				}
+			}
+		}
+		//Try all drops
+		Map<Character, List<Piece>> capturedPieces = currentPlayer.getAllCapturedPieces();
+		for (Map.Entry<Character, List<Piece>> e : capturedPieces.entrySet()) {
+			if (e.getValue().size() > 0) {
+				//Get the piece but do not remove
+				Piece p = e.getValue().get(0);
+				for (int row = 0; row < BOARD_SIZE; row++) {
+					for (int col = 0; col < BOARD_SIZE; col++) {
+						if (canUncheckDrop(p, row, col, currentPlayer)) {
+							String to = index2addr(row, col);
+							strategies.add(Utils.stringifyDrop(p, to));
+						}
+					}
+				}
+			}
+		}
+		return strategies;
+	}
+	
+	private boolean canUncheckMove(int startRow, int startCol, int endRow, int endCol, Player currentPlayer) {
+		if (!isValidMove(startRow, startCol, endRow, endCol, false, currentPlayer)) {
+			return false;
+		}
+		//Try the move
+		Piece p = getPiece(startRow, startCol);
+		Piece pAtEndAddr = getPiece(endRow, endCol);
+		if (pAtEndAddr != null) {
+			//Remove but do not capture
+			removePiece(endRow, endCol);
+		}
+		removePiece(startRow, startCol);
+		placePiece(p, endRow, endCol);
+		boolean succeed = isCheck(currentPlayer);
+		//Undo the move
+		placePiece(p, startRow, startCol);
+		placePiece(pAtEndAddr, endRow, endCol);
+		return succeed;
+	}
+	
+	private boolean canUncheckDrop(Piece p, int row, int col, Player currentPlayer) {
+		if (getPiece(row, col) != null) return false;
+		if (!p.isLegalDrop(row, col, this)) return false;
+		placePiece(p, row, col);
+		boolean succeed = isCheck(currentPlayer);
+		//Undo the drop
+		removePiece(row, col);
+		return succeed;
 	}
 }

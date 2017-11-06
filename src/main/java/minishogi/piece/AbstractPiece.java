@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import minishogi.core.Board;
-import minishogi.core.Facing;
 import minishogi.core.Piece;
 import minishogi.core.Player;
+import minishogi.utils.Facing;
+import minishogi.utils.PieceMove;
 
 /**
  * Abstract class representing the basic concept of a piece in MiniShogi 
@@ -16,11 +17,10 @@ import minishogi.core.Player;
 public abstract class AbstractPiece implements Piece{
 	private char symbol;
 	private Player owner;
-	private Set<Move> moves;
-	protected boolean promoted;
+	private Set<PieceMove> moves;
 	protected Facing facing;
 	
-	protected AbstractPiece(char symbol, Player owner, Set<Move> moves) {
+	protected AbstractPiece(char symbol, Player owner, Set<PieceMove> moves) {
 		this.symbol = symbol;
 		this.owner = owner;
 		this.facing = owner.getFacing();
@@ -50,11 +50,11 @@ public abstract class AbstractPiece implements Piece{
 	
 	protected abstract void demote();
 	
-	protected void setMoves(Set<Move> moves) {
+	protected void setMoves(Set<PieceMove> moves) {
 		this.moves = moves;
 	}
 	
-	protected Set<Move> getMoves() {
+	protected Set<PieceMove> getMoves() {
 		return moves;
 	}
 	
@@ -63,9 +63,9 @@ public abstract class AbstractPiece implements Piece{
 	}
 	
 	@Override
-	public Set<Move> getAllValidMoves(int startRow, int startCol, Board board) {
-		Set<Move> rtn = new HashSet<>();
-		for (Move m : moves) {
+	public Set<PieceMove> getAllValidMoves(int startRow, int startCol, Board board) {
+		Set<PieceMove> rtn = new HashSet<>();
+		for (PieceMove m : moves) {
 			int endRow = startRow + m.getDeltaRow();
 			int endCol = startCol + m.getDeltaCol();
 			if (!board.inBound(endRow, endCol)) continue;
@@ -83,10 +83,10 @@ public abstract class AbstractPiece implements Piece{
 	
 	@Override
 	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
-		Set<Move> possibleMoves = getAllValidMoves(startRow, startCol, board);
+		Set<PieceMove> possibleMoves = getAllValidMoves(startRow, startCol, board);
 		int deltaRow = endRow - startRow;
 		int deltaCol = endCol - startCol;
-		for (Move m : possibleMoves) {
+		for (PieceMove m : possibleMoves) {
 			if (m.isEqual(deltaRow, deltaCol)) return true;
 		}
 		return false;

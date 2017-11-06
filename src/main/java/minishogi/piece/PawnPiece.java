@@ -1,10 +1,9 @@
 package minishogi.piece;
 
-import java.util.Map;
-
 import minishogi.core.Board;
 import minishogi.core.Piece;
 import minishogi.core.Player;
+import minishogi.utils.PieceMove;
 
 /**
  * Represents a pawn in MiniShogi
@@ -13,15 +12,13 @@ import minishogi.core.Player;
  */
 public final class PawnPiece extends AbstractPiece{
 	private static final char DEFAULT_SYMBOL = 'P';
-	private boolean promoted;
 
 	/**
 	 * Pawn Piece Constructor 
 	 * @param owner : the owner of the piece
 	 */
 	public PawnPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, Move.getPawnMoves(owner.getFacing()));
-		promoted = false;
+		super(DEFAULT_SYMBOL, owner, PieceMove.getPawnMoves(owner.getFacing()));
 	}
 
 	@Override
@@ -29,15 +26,13 @@ public final class PawnPiece extends AbstractPiece{
 		if (!canPromote(endRow, board)) {
 			return false;
 		}
-		setMoves(Move.getGoldGeneralMoves(facing));
-		promoted = true;
+		setMoves(PieceMove.getGoldGeneralMoves(facing));
 		return true;
 	}
 
 	@Override
 	protected void demote() {
-		setMoves(Move.getPawnMoves(facing));
-		promoted = false;
+		setMoves(PieceMove.getPawnMoves(facing));
 	}
 
 	@Override
@@ -51,10 +46,11 @@ public final class PawnPiece extends AbstractPiece{
 		}
 		//Cannot be dropped into the promotion zone
 		if (board.getPromoteRow(owner.getFacing()) == row) return false;
-		//Cannot lead to an immediate check
-		Map<String, Integer> kingLocation = board.getOpponentKingLocation(owner);
-		if (isWithinMoveRange(row, col, kingLocation.get("row"), kingLocation.get("col"), board)) return false;
-		return true;
+		//Cannot lead to an immediate checkMate
+		board.placePiece(this, row, col);
+		boolean checkMate = board.isCheckMate(owner);
+		board.removePiece(row, col);
+		return !checkMate;
 	}
 
 }
