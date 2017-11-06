@@ -37,15 +37,16 @@ public class Utils {
 	/**
 	 * initial position of a piece
 	 */
-    static class InitialPosition {
-        String piece;
-        String position;
+	public static class InitialPosition {
+        final String piece;
+        final String position;
         
         InitialPosition(String pc, String pos) {
             piece = pc;
             position = pos;
         }
 
+        @Override
         public String toString() {
             return piece + " " + position;
         }
@@ -54,12 +55,12 @@ public class Utils {
     /**
      * a test case
      */
-    static class TestCase {
+    public static class TestCase {
 
-        List<InitialPosition> initialPieces;
-        List<String> upperCaptures;
-        List<String> lowerCaptures;
-        List<String> moves;
+        final List<InitialPosition> initialPieces;
+        final List<String> upperCaptures;
+        final List<String> lowerCaptures;
+        final List<String> moves;
 
         TestCase(List<InitialPosition> ip, List<String> uc, List<String> lc, List<String> m) {
             initialPieces = ip;
@@ -68,6 +69,7 @@ public class Utils {
             moves = m;
         }
 
+        @Override
         public String toString() {
             String str = "";
 

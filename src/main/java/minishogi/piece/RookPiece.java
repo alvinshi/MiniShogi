@@ -30,12 +30,14 @@ public final class RookPiece extends AbstractPiece{
 		Set<PieceMove> moves = PieceMove.getRookMoves();
 		moves.addAll(PieceMove.getKingMoves());
 		setMoves(moves);
+		promoted = true;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
 		setMoves(PieceMove.getRookMoves());
+		promoted = false;
 	}
 
 	@Override

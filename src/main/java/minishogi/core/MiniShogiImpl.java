@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.Scanner;
 
 import minishogi.game.MiniShogi;
+import minishogi.utils.Utils;
 
 /**
  * Implementation of MiniShogi
@@ -20,7 +21,7 @@ public final class MiniShogiImpl implements MiniShogi{
 	private static final int MOVE_LIMIT = 200;
 	
 	private int turn;
-	private boolean gameOver;
+	private boolean gameOver = true;
 	private Queue<Player> playerQueue;
 	private Player currentPlayer;
 	private Board board;
@@ -34,6 +35,31 @@ public final class MiniShogiImpl implements MiniShogi{
 		}
 	}
 	
+	/**
+	 * Construct a game based on the test case
+	 * @param tc : the test case
+	 */
+	public MiniShogiImpl(Utils.TestCase tc) {
+		//TODO: implement this!
+	}
+	
+	/**
+	 * Default constructor to start a new game
+	 * @throws FileNotFoundException : the game.init file cannot be found
+	 * @throws InstantiationException : failed to create piece
+	 * @throws IllegalAccessException : does not have access to the corresponding piece class
+	 * @throws IllegalArgumentException : illegal argument in the constructor
+	 * @throws InvocationTargetException : failed to invoke a target
+	 * @throws NoSuchMethodException : no constructor found
+	 * @throws SecurityException : security
+	 * @throws ClassNotFoundException : class is not found
+	 */
+	public MiniShogiImpl() throws FileNotFoundException, InstantiationException, 
+	IllegalAccessException, IllegalArgumentException, InvocationTargetException, 
+	NoSuchMethodException, SecurityException, ClassNotFoundException {
+		newGame();
+	}
+
 	@Override
 	public void newGame() throws FileNotFoundException, InstantiationException, 
 		IllegalAccessException, IllegalArgumentException, InvocationTargetException, 

@@ -30,12 +30,14 @@ public final class BishopPiece extends AbstractPiece{
 		Set<PieceMove> moves = PieceMove.getBishopMoves();
 		moves.addAll(PieceMove.getKingMoves());
 		setMoves(moves);
+		promoted = true;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
 		setMoves(PieceMove.getBishopMoves());
+		promoted = false;
 	}
 
 	@Override

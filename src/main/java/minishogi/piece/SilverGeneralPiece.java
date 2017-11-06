@@ -30,12 +30,14 @@ public final class SilverGeneralPiece extends AbstractPiece{
 		Set<PieceMove> moves = PieceMove.getSilverGeneralMoves(facing);
 		moves.addAll(PieceMove.getGoldGeneralMoves(facing));
 		setMoves(moves);
+		promoted = true;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
 		setMoves(PieceMove.getSilverGeneralMoves(facing));
+		promoted = false;
 	}
 
 	@Override

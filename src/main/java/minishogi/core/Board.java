@@ -157,6 +157,9 @@ public final class Board {
 		}
 		removePiece(startRow, startCol);
 		placePiece(p, endRow, endCol);
+		//Cannot move into a check position
+		Player opponent = getOpponent(currentPlayer);
+		if (isCheck(opponent)) return false;
 		return true;
 	}
 	

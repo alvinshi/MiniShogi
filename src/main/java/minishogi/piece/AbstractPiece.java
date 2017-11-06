@@ -18,13 +18,15 @@ public abstract class AbstractPiece implements Piece{
 	private char symbol;
 	private Player owner;
 	private Set<PieceMove> moves;
+	protected boolean promoted;
 	protected Facing facing;
 	
 	protected AbstractPiece(char symbol, Player owner, Set<PieceMove> moves) {
-		this.symbol = symbol;
+		this.symbol = owner.getSymbol(symbol);
 		this.owner = owner;
 		this.facing = owner.getFacing();
 		this.moves = moves;
+		promoted = false;
 	}
 	
 	@Override
@@ -97,6 +99,9 @@ public abstract class AbstractPiece implements Piece{
 	
 	@Override
 	public String toString() {
+		if (promoted) {
+			return "+" + String.valueOf(symbol);
+		}
 		return String.valueOf(symbol);
 	}	
 }

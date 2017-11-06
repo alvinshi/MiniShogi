@@ -27,12 +27,14 @@ public final class PawnPiece extends AbstractPiece{
 			return false;
 		}
 		setMoves(PieceMove.getGoldGeneralMoves(facing));
+		promoted = false;
 		return true;
 	}
 
 	@Override
 	protected void demote() {
 		setMoves(PieceMove.getPawnMoves(facing));
+		promoted = true;
 	}
 
 	@Override
