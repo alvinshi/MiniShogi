@@ -20,6 +20,11 @@ public final class KingPiece extends AbstractPiece{
 		super(DEFAULT_SYMBOL, owner, PieceMove.getKingMoves());
 	}
 	
+
+	@Override
+	public void promote() {		
+	}
+	
 	@Override
 	public boolean promote(int endRow, Board board) {
 		return false;

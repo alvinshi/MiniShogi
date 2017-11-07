@@ -21,16 +21,21 @@ public final class SilverGeneralPiece extends AbstractPiece{
 	public SilverGeneralPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner, PieceMove.getSilverGeneralMoves(owner.getFacing()));
 	}
+	
+	@Override
+	public void promote() {
+		Set<PieceMove> moves = PieceMove.getSilverGeneralMoves(facing);
+		moves.addAll(PieceMove.getGoldGeneralMoves(facing));
+		setMoves(moves);
+		promoted = true;
+	}
 
 	@Override
 	public boolean promote(int endRow, Board board) {
 		if (!canPromote(endRow, board)) {
 			return false;
 		}
-		Set<PieceMove> moves = PieceMove.getSilverGeneralMoves(facing);
-		moves.addAll(PieceMove.getGoldGeneralMoves(facing));
-		setMoves(moves);
-		promoted = true;
+		promote();
 		return true;
 	}
 
@@ -44,5 +49,4 @@ public final class SilverGeneralPiece extends AbstractPiece{
 	public boolean isLegalDrop(int row, int col, Board board) {
 		return true;
 	}
-
 }

@@ -38,8 +38,8 @@ public class Utils {
 	 * initial position of a piece
 	 */
 	public static class InitialPosition {
-        final String piece;
-        final String position;
+		public final String piece;
+		public final String position;
         
         InitialPosition(String pc, String pos) {
             piece = pc;
@@ -57,10 +57,10 @@ public class Utils {
      */
     public static class TestCase {
 
-        final List<InitialPosition> initialPieces;
-        final List<String> upperCaptures;
-        final List<String> lowerCaptures;
-        final List<String> moves;
+        public final List<InitialPosition> initialPieces;
+        public final List<String> upperCaptures;
+        public final List<String> lowerCaptures;
+        public final List<String> moves;
 
         TestCase(List<InitialPosition> ip, List<String> uc, List<String> lc, List<String> m) {
             initialPieces = ip;

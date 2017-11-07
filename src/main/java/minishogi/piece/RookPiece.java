@@ -21,16 +21,21 @@ public final class RookPiece extends AbstractPiece{
 	public RookPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner, PieceMove.getRookMoves());
 	}
+	
+	@Override
+	public void promote() {
+		Set<PieceMove> moves = PieceMove.getRookMoves();
+		moves.addAll(PieceMove.getKingMoves());
+		setMoves(moves);
+		promoted = true;
+	}
 
 	@Override
 	public boolean promote(int endRow, Board board) {
 		if (!canPromote(endRow, board)) {
 			return false;
 		}
-		Set<PieceMove> moves = PieceMove.getRookMoves();
-		moves.addAll(PieceMove.getKingMoves());
-		setMoves(moves);
-		promoted = true;
+		promote();
 		return true;
 	}
 

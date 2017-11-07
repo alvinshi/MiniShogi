@@ -19,6 +19,10 @@ public final class GoldGeneralPiece extends AbstractPiece{
 	public GoldGeneralPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner, PieceMove.getGoldGeneralMoves(owner.getFacing()));
 	}
+	
+	@Override
+	public void promote() {		
+	}
 
 	@Override
 	public boolean promote(int endRow, Board board) {

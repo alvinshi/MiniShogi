@@ -69,6 +69,19 @@ public final class Board {
 	}
 	
 	/**
+	 * Get the Piece based on the address string
+	 * @param address : the address string
+	 * @return return the piece on the address
+	 *         return null otherwise;
+	 */
+	public Piece getPiece(String address) {
+		if (!isValidAddr(address)) return null;
+		int row = addr2Row(address);
+		int col = addr2Col(address);
+		return getPiece(row, col);
+	}
+	
+	/**
 	 * Get the promote row number based on the facing of the piece
 	 * @param facing : UP or DOWN
 	 * @return : the row index of the promotion row

@@ -3,12 +3,16 @@ package minishogi.core;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
 import minishogi.game.MiniShogi;
-import minishogi.utils.Utils;
+import minishogi.piece.AbstractPiece;
+import minishogi.utils.Utils.InitialPosition;
+import minishogi.utils.Utils.TestCase;
 
 /**
  * Implementation of MiniShogi
@@ -25,6 +29,7 @@ public final class MiniShogiImpl implements MiniShogi{
 	private Queue<Player> playerQueue;
 	private Player currentPlayer;
 	private Board board;
+	private List<GameListener> gameListeners;
 	
 	private void nextTurn() {
 		currentPlayer = playerQueue.poll();
@@ -35,12 +40,72 @@ public final class MiniShogiImpl implements MiniShogi{
 		}
 	}
 	
+	private void placePiece(String symbol, String address, Board board, Player upper, Player lower) {
+		Piece p = AbstractPiece.produce(symbol, upper, lower);
+		board.placePiece(p, address);
+	}
+	
 	/**
 	 * Construct a game based on the test case
+	 * This constructor is purely for testing purposes
 	 * @param tc : the test case
 	 */
-	public MiniShogiImpl(Utils.TestCase tc) {
-		//TODO: implement this!
+	public MiniShogiImpl(TestCase tc) {
+		turn = 0;
+		gameOver = false;
+		gameListeners = new ArrayList<>();
+		
+		//Initialize Players and the queue
+		playerQueue = new LinkedList<>();
+		Player upperPlayer = new Player(true);
+		Player lowerPlayer = new Player(false);
+		
+		//The board
+		board = new Board();
+		List<InitialPosition> ips = tc.initialPieces;
+		for (InitialPosition ip : ips) {
+			String symbol = ip.piece;
+			String address = ip.position;
+			placePiece(symbol, address, board, upperPlayer, lowerPlayer);
+		}
+		List<String> upperCaptures = tc.upperCaptures;
+		for (String symbol : upperCaptures) {
+			if (symbol.length() < 1) continue;
+			Piece p = AbstractPiece.produce(symbol, upperPlayer, lowerPlayer);
+			upperPlayer.addCapturedPiece(p);
+		}
+		List<String> lowerCaptures = tc.lowerCaptures;
+		for (String symbol : lowerCaptures) {
+			if (symbol.length() < 1) continue;
+			Piece p = AbstractPiece.produce(symbol, upperPlayer, lowerPlayer);
+			lowerPlayer.addCapturedPiece(p);
+		}
+		
+		//Determine the first player based on the first move
+		List<String> moves = tc.moves;
+		String[] firstMove = (moves.get(0)).split("\\s+");
+		if (firstMove[0].equals("drop")) {
+			if (Character.isLowerCase(firstMove[1].charAt(0))) {
+				playerQueue.add(lowerPlayer);
+				playerQueue.add(upperPlayer);
+			}
+			else {
+				playerQueue.add(upperPlayer);
+				playerQueue.add(lowerPlayer);				
+			}
+		}
+		else {
+			Piece p = board.getPiece(firstMove[1]);
+			if (p.getOwner() == upperPlayer) {
+				playerQueue.add(upperPlayer);
+				playerQueue.add(lowerPlayer);
+			}
+			else {
+				playerQueue.add(lowerPlayer);
+				playerQueue.add(upperPlayer);
+			}
+		}
+		nextTurn();
 	}
 	
 	/**
@@ -57,6 +122,7 @@ public final class MiniShogiImpl implements MiniShogi{
 	public MiniShogiImpl() throws FileNotFoundException, InstantiationException, 
 	IllegalAccessException, IllegalArgumentException, InvocationTargetException, 
 	NoSuchMethodException, SecurityException, ClassNotFoundException {
+		gameListeners = new ArrayList<>();
 		newGame();
 	}
 
@@ -128,5 +194,15 @@ public final class MiniShogiImpl implements MiniShogi{
 			gameOver = true;
 			return false;
 		}
+	}
+
+	@Override
+	public void registerGameListener(GameListener gameListener) {
+		gameListeners.add(gameListener);
+	}
+
+	@Override
+	public void clearGameListener() {
+		gameListeners = new ArrayList<>();
 	}
 }

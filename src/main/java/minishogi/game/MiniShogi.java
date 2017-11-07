@@ -1,5 +1,7 @@
 package minishogi.game;
 
+import minishogi.core.GameListener;
+
 /**
  * MiniShogi Game API
  * @author alvinshi
@@ -29,4 +31,15 @@ public interface MiniShogi {
 	 * @return : true if the drop is valid, false otherwise
 	 */
 	boolean drop(char piece, String address);
+	
+	/**
+	 * Register game listener to the core
+	 * @param gameListener : a new game listener
+	 */
+	void registerGameListener(GameListener gameListener);
+	
+	/**
+	 * De-register all game listeners from the core
+	 */
+	void clearGameListener();
 }

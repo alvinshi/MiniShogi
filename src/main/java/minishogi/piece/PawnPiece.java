@@ -20,14 +20,19 @@ public final class PawnPiece extends AbstractPiece{
 	public PawnPiece(Player owner) {
 		super(DEFAULT_SYMBOL, owner, PieceMove.getPawnMoves(owner.getFacing()));
 	}
+	
+	@Override
+	public void promote() {
+		setMoves(PieceMove.getGoldGeneralMoves(facing));
+		promoted = false;
+	}
 
 	@Override
 	public boolean promote(int endRow, Board board) {
 		if (!canPromote(endRow, board)) {
 			return false;
 		}
-		setMoves(PieceMove.getGoldGeneralMoves(facing));
-		promoted = false;
+		promote();
 		return true;
 	}
 
@@ -54,5 +59,4 @@ public final class PawnPiece extends AbstractPiece{
 		board.removePiece(row, col);
 		return !checkMate;
 	}
-
 }

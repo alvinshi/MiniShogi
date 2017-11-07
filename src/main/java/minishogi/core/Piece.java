@@ -31,6 +31,11 @@ public interface Piece {
 	char getSymbol();
 	
 	/**
+	 * promote the piece without questioning
+	 */
+	void promote();
+	
+	/**
 	 * promote the piece based on the Board and the row
 	 * the piece landed
 	 * @param endRow : the row the piece moves to

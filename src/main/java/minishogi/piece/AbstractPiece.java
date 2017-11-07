@@ -103,5 +103,53 @@ public abstract class AbstractPiece implements Piece{
 			return "+" + String.valueOf(symbol);
 		}
 		return String.valueOf(symbol);
-	}	
+	}
+	
+	/**
+	 * Produce a piece based on the symbol
+	 * This factory method is there for testing
+	 * @param symbol : the symbol
+	 * @param upper : upper player reference
+	 * @param lower : lower player reference
+	 * @return : the corresponding piece
+	 */
+	public static Piece produce(String symbol, Player upper, Player lower) {
+		boolean promoted = false;
+		if (symbol.length() == 2) {
+			promoted = true;
+			symbol = symbol.substring(1);
+		}
+		char charSymbol = symbol.charAt(0);
+		Player owner;
+		if (Character.isUpperCase(charSymbol)) {
+			owner = upper;
+		}
+		else {
+			owner = lower;
+		}
+		Piece p;
+		switch (Character.toLowerCase(charSymbol)) {
+		case 'b' : 
+			p = new BishopPiece(owner);
+			break;
+		case 'k' : 
+			p = new KingPiece(owner);
+			break;
+		case 'p' : 
+			p = new PawnPiece(owner);
+			break;
+		case 'r' : 
+			p = new RookPiece(owner);
+			break;
+		case 's' : 
+			p = new SilverGeneralPiece(owner);
+			break;
+		default : 
+			p = new GoldGeneralPiece(owner);
+		}
+		if (promoted) {
+			p.promote();
+		}
+		return p;
+	}
 }
