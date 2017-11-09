@@ -1,10 +1,7 @@
 package minishogi.piece;
 
-import java.util.Set;
-
 import minishogi.core.Board;
 import minishogi.core.Player;
-import minishogi.utils.PieceMove;
 
 /**
  * Represents a Silver General in MiniShogi
@@ -19,14 +16,11 @@ public final class SilverGeneralPiece extends AbstractPiece{
 	 * @param owner : the owner of the piece
 	 */
 	public SilverGeneralPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, PieceMove.getSilverGeneralMoves(owner.getFacing()));
+		super(DEFAULT_SYMBOL, owner);
 	}
 	
 	@Override
 	public void promote() {
-		Set<PieceMove> moves = PieceMove.getSilverGeneralMoves(facing);
-		moves.addAll(PieceMove.getGoldGeneralMoves(facing));
-		setMoves(moves);
 		promoted = true;
 	}
 
@@ -41,12 +35,21 @@ public final class SilverGeneralPiece extends AbstractPiece{
 
 	@Override
 	protected void demote() {
-		setMoves(PieceMove.getSilverGeneralMoves(facing));
 		promoted = false;
 	}
 
 	@Override
 	public boolean isLegalDrop(int row, int col, Board board) {
 		return true;
+	}
+
+	@Override
+	protected boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
+		if (promoted) {
+			return PieceMoveUtil.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
+		}
+		else {
+			return PieceMoveUtil.silverGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
+		}
 	}
 }

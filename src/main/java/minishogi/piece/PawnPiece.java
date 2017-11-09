@@ -3,7 +3,6 @@ package minishogi.piece;
 import minishogi.core.Board;
 import minishogi.core.Piece;
 import minishogi.core.Player;
-import minishogi.utils.PieceMove;
 
 /**
  * Represents a pawn in MiniShogi
@@ -18,12 +17,11 @@ public final class PawnPiece extends AbstractPiece{
 	 * @param owner : the owner of the piece
 	 */
 	public PawnPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, PieceMove.getPawnMoves(owner.getFacing()));
+		super(DEFAULT_SYMBOL, owner);
 	}
 	
 	@Override
 	public void promote() {
-		setMoves(PieceMove.getGoldGeneralMoves(facing));
 		promoted = false;
 	}
 
@@ -38,7 +36,6 @@ public final class PawnPiece extends AbstractPiece{
 
 	@Override
 	protected void demote() {
-		setMoves(PieceMove.getPawnMoves(facing));
 		promoted = true;
 	}
 
@@ -58,5 +55,13 @@ public final class PawnPiece extends AbstractPiece{
 		boolean checkMate = board.isCheckMate(owner);
 		board.removePiece(row, col);
 		return !checkMate;
+	}
+
+	@Override
+	protected boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
+		if (promoted) {
+			return PieceMoveUtil.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
+		}
+		return PieceMoveUtil.pawnPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 	}
 }

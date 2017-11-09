@@ -2,7 +2,6 @@ package minishogi.piece;
 
 import minishogi.core.Board;
 import minishogi.core.Player;
-import minishogi.utils.PieceMove;
 
 /**
  * Represents a Gold General in MiniShogi
@@ -17,7 +16,7 @@ public final class GoldGeneralPiece extends AbstractPiece{
 	 * @param owner : the owner of the new piece
 	 */
 	public GoldGeneralPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, PieceMove.getGoldGeneralMoves(owner.getFacing()));
+		super(DEFAULT_SYMBOL, owner);
 	}
 	
 	@Override
@@ -36,5 +35,10 @@ public final class GoldGeneralPiece extends AbstractPiece{
 	@Override
 	public boolean isLegalDrop(int row, int col, Board board) {
 		return true;
+	}
+
+	@Override
+	protected boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
+		return PieceMoveUtil.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 	}
 }

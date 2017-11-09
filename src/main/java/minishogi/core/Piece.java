@@ -46,6 +46,8 @@ public interface Piece {
 	
 	/**
 	 * check is the move is within the range of the piece
+	 * if the end address is occupied by a piece of the same owner,
+	 * the move is invalid too.
 	 * @param startRow : start row index (1~5)
 	 * @param startCol : start column index (a~e)
 	 * @param endRow : end row index (1~5)
@@ -53,7 +55,7 @@ public interface Piece {
 	 * @param board : board is needed to check if the move is being blocked
 	 * @return : true if the move is with the range, false otherwise
 	 */
-	boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board);
+	boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Board board);
 	
 	/**
 	 * check if the drop is legal

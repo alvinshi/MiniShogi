@@ -17,15 +17,13 @@ import minishogi.utils.PieceMove;
 public abstract class AbstractPiece implements Piece{
 	private char symbol;
 	private Player owner;
-	private Set<PieceMove> moves;
 	protected boolean promoted;
 	protected Facing facing;
 	
-	protected AbstractPiece(char symbol, Player owner, Set<PieceMove> moves) {
+	protected AbstractPiece(char symbol, Player owner) {
 		this.symbol = owner.getSymbol(symbol);
 		this.owner = owner;
 		this.facing = owner.getFacing();
-		this.moves = moves;
 		promoted = false;
 	}
 	
@@ -51,15 +49,7 @@ public abstract class AbstractPiece implements Piece{
 	public abstract boolean promote(int endRow, Board board);
 	
 	protected abstract void demote();
-	
-	protected void setMoves(Set<PieceMove> moves) {
-		this.moves = moves;
-	}
-	
-	protected Set<PieceMove> getMoves() {
-		return moves;
-	}
-	
+		
 	protected boolean canPromote(int row, Board board) {
 		return row == board.getPromoteRow(facing);
 	}
@@ -67,32 +57,27 @@ public abstract class AbstractPiece implements Piece{
 	@Override
 	public Set<PieceMove> getAllValidMoves(int startRow, int startCol, Board board) {
 		Set<PieceMove> rtn = new HashSet<>();
-		for (PieceMove m : moves) {
-			int endRow = startRow + m.getDeltaRow();
-			int endCol = startCol + m.getDeltaCol();
-			if (!board.inBound(endRow, endCol)) continue;
-			Piece p = board.getPiece(endRow, endCol);
-			if (p != null && p.getOwner() == owner) continue;
-			if (m.isTwoSteps()) {
-				int midRow = (endRow +startRow) / 2;
-				int midCol = (endCol +startCol) / 2;
-				if (board.getPiece(midRow, midCol) != null) continue;
+		for (int row = 0; row < board.getBoardSize(); row++) {
+			for (int col = 0; col < board.getBoardSize(); col++) {
+				if (isValidMove(startRow, startCol, row, col, board)) {
+					int deltaRow = row - startRow;
+					int deltaCol = col - startCol;
+					rtn.add(new PieceMove(deltaRow, deltaCol));
+				}
 			}
-			rtn.add(m);
 		}
 		return rtn;
 	}
 	
-	@Override
-	public boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
-		Set<PieceMove> possibleMoves = getAllValidMoves(startRow, startCol, board);
-		int deltaRow = endRow - startRow;
-		int deltaCol = endCol - startCol;
-		for (PieceMove m : possibleMoves) {
-			if (m.isEqual(deltaRow, deltaCol)) return true;
-		}
-		return false;
+	@Override 
+	public boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Board board) {
+		if (startRow == startCol && endRow == endCol) return false;
+		Piece p = board.getPiece(endRow, endCol);
+		if (p != null && p.getOwner() == owner) return false;
+		return isWithinMoveRange(startRow, startCol, endRow, endCol, board);
 	}
+	
+	protected abstract boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board);
 	
 	@Override
 	public abstract boolean isLegalDrop(int row, int col, Board board);

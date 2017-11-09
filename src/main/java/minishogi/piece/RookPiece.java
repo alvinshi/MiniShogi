@@ -1,10 +1,7 @@
 package minishogi.piece;
 
-import java.util.Set;
-
 import minishogi.core.Board;
 import minishogi.core.Player;
-import minishogi.utils.PieceMove;
 
 /**
  * Represents a Rook in MiniShogi
@@ -19,14 +16,11 @@ public final class RookPiece extends AbstractPiece{
 	 * @param owner : the owner of the new piece
 	 */
 	public RookPiece(Player owner) {
-		super(DEFAULT_SYMBOL, owner, PieceMove.getRookMoves());
+		super(DEFAULT_SYMBOL, owner);
 	}
 	
 	@Override
 	public void promote() {
-		Set<PieceMove> moves = PieceMove.getRookMoves();
-		moves.addAll(PieceMove.getKingMoves());
-		setMoves(moves);
 		promoted = true;
 	}
 
@@ -41,12 +35,22 @@ public final class RookPiece extends AbstractPiece{
 
 	@Override
 	protected void demote() {
-		setMoves(PieceMove.getRookMoves());
 		promoted = false;
 	}
 
 	@Override
 	public boolean isLegalDrop(int row, int col, Board board) {
 		return true;
+	}
+
+	@Override
+	protected boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
+		if (promoted) {
+			return (PieceMoveUtil.rookPieceMoveCheck(startRow, startCol, endRow, endCol, board) ||
+					PieceMoveUtil.kingPieceMoveCheck(startRow, startCol, endRow, endCol));
+		}
+		else {
+			return PieceMoveUtil.rookPieceMoveCheck(startRow, startCol, endRow, endCol, board);
+		}
 	}
 }

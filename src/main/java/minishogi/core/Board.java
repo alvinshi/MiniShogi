@@ -137,7 +137,7 @@ public final class Board {
 		Piece p = getPiece(startRow, startCol);
 		if (p == null) return false;
 		if (p.getOwner() != currentPlayer) return false;
-		if (!p.isWithinMoveRange(startRow, startCol, endRow, endCol, this)) return false;
+		if (!p.isValidMove(startRow, startCol, endRow, endCol, this)) return false;
 		if (promote) {
 			if (!p.promote(endRow, this)) return false;
 		}
@@ -219,7 +219,7 @@ public final class Board {
 				Piece p = board[row][col];
 				if (p != null && p.getOwner() == currentPlayer) {
 					Map<String, Integer> kingLoc = getOpponentKingLocation(currentPlayer);
-					if (p.isWithinMoveRange(row, col, kingLoc.get("row"), kingLoc.get("col"), this)) {
+					if (p.isValidMove(row, col, kingLoc.get("row"), kingLoc.get("col"), this)) {
 						return true;
 					}
 				}
