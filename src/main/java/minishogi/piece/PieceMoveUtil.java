@@ -42,7 +42,7 @@ class PieceMoveUtil {
 	static boolean bishopPieceMoveCheck(int startRow, int startCol, int endRow, int endCol, Board board) {
 		int deltaRow = endRow - startRow;
 		int deltaCol = endCol - startCol;
-		if (Math.abs(deltaCol) != Math.abs(deltaCol)) return false;
+		if (Math.abs(deltaRow) != Math.abs(deltaCol)) return false;
 		int dRow = (deltaRow < 0) ? -1 : 1;
 		int dCol = (deltaCol < 0) ? -1 : 1;
 		for (int i = 1; i < Math.abs(deltaRow); i++) {

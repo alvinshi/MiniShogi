@@ -16,6 +16,12 @@ public interface MiniShogi {
 	void newGame() throws Exception;
 	
 	/**
+	 * Check if the game has finished
+	 * @return true if the game has ended
+	 */
+	boolean hasEnd();
+	
+	/**
 	 * Move the piece at "fromAddr" to "toAddr"
 	 * @param fromAddr : From Address format [a-e][1-5]
 	 * @param toAddr : To Address format [a-e][1-5]

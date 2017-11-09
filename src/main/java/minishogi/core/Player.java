@@ -1,9 +1,7 @@
 package minishogi.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import minishogi.utils.Facing;
 
@@ -13,18 +11,21 @@ import minishogi.utils.Facing;
  *
  */
 public final class Player {
+	private final String name;
 	private final boolean isUpperPlayer;
-	private final Map<Character, List<Piece>> capturedPieces;
+	private final List<Piece> capturedPieces;
 	private final Facing facing;
 	
 	Player(boolean isUpperPlayer) {
 		this.isUpperPlayer = isUpperPlayer;
-		capturedPieces = new HashMap<>();
+		capturedPieces = new LinkedList<>(); //Keep the insertion order
 		if (isUpperPlayer) {
 			facing = Facing.DOWN;
+			name = "UPPER";
 		}
 		else {
 			facing = Facing.UP;
+			name = "lower";
 		}
 	}
 	
@@ -49,32 +50,33 @@ public final class Player {
 	}
 	
 	void addCapturedPiece(Piece p) {
-		char symbol = Character.toLowerCase(p.getSymbol());
-		if (capturedPieces.containsKey(symbol)) {
-			capturedPieces.get(symbol).add(p);
-		}
-		else {
-			List<Piece> pieces = new ArrayList<>();
-			pieces.add(p);
-			capturedPieces.put(symbol, pieces);
-		}
+		capturedPieces.add(p);
 	}
 	
 	Piece getPiece(char symbol) {
-		if (capturedPieces.containsKey(symbol)) {
-			try {
-				Piece p = capturedPieces.get(symbol).remove(0);
+		for (Piece p : capturedPieces) {
+			if (p.getSymbol() == symbol) {
+				capturedPieces.remove(p);
 				return p;
-			} catch (IndexOutOfBoundsException e) {
-				return null;
 			}
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 	
-	Map<Character, List<Piece>> getAllCapturedPieces() {
+	List<Piece> getAllCapturedPieces() {
 		return capturedPieces;
+	}
+	
+	List<String> getAllCapturedPiecesSnapShot() {
+		List<String> rtn = new LinkedList<>();
+		for (Piece p : capturedPieces) {
+			rtn.add(p.toString());
+		}
+		return rtn;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }

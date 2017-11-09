@@ -13,7 +13,7 @@ import minishogi.core.Piece;
  * @author alvinshi, box
  *
  */
-public class Utils {
+public class Utils {	
 	/**
 	 * Stringify a move based on from and to addresses
 	 * @param from : from address

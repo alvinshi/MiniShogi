@@ -27,6 +27,8 @@ public final class MiniShogiImpl implements MiniShogi{
 	private int turn;
 	private boolean gameOver = true;
 	private Queue<Player> playerQueue;
+	private Player upperPlayer;
+	private Player lowerPlayer;
 	private Player currentPlayer;
 	private Board board;
 	private List<GameListener> gameListeners;
@@ -57,8 +59,8 @@ public final class MiniShogiImpl implements MiniShogi{
 		
 		//Initialize Players and the queue
 		playerQueue = new LinkedList<>();
-		Player upperPlayer = new Player(true);
-		Player lowerPlayer = new Player(false);
+		upperPlayer = new Player(true);
+		lowerPlayer = new Player(false);
 		
 		//The board
 		board = new Board();
@@ -81,30 +83,8 @@ public final class MiniShogiImpl implements MiniShogi{
 			lowerPlayer.addCapturedPiece(p);
 		}
 		
-		//Determine the first player based on the first move
-		List<String> moves = tc.moves;
-		String[] firstMove = (moves.get(0)).split("\\s+");
-		if (firstMove[0].equals("drop")) {
-			if (Character.isLowerCase(firstMove[1].charAt(0))) {
-				playerQueue.add(lowerPlayer);
-				playerQueue.add(upperPlayer);
-			}
-			else {
-				playerQueue.add(upperPlayer);
-				playerQueue.add(lowerPlayer);				
-			}
-		}
-		else {
-			Piece p = board.getPiece(firstMove[1]);
-			if (p.getOwner() == upperPlayer) {
-				playerQueue.add(upperPlayer);
-				playerQueue.add(lowerPlayer);
-			}
-			else {
-				playerQueue.add(lowerPlayer);
-				playerQueue.add(upperPlayer);
-			}
-		}
+		playerQueue.add(lowerPlayer);
+		playerQueue.add(upperPlayer);
 		nextTurn();
 	}
 	
@@ -136,10 +116,10 @@ public final class MiniShogiImpl implements MiniShogi{
 		
 		//Initialize Players and the queue
 		playerQueue = new LinkedList<>();
-		Player upperPlayer = new Player(true);
-		Player lowerPlayer = new Player(false);
-		playerQueue.add(upperPlayer);
+		upperPlayer = new Player(true);
+		lowerPlayer = new Player(false);
 		playerQueue.add(lowerPlayer);
+		playerQueue.add(upperPlayer);
 		nextTurn();
 		
 		//Initialize Pieces and Board
@@ -168,6 +148,19 @@ public final class MiniShogiImpl implements MiniShogi{
 		if (gameOver) return false;
 		boolean legalMove = board.makeMove(fromAddr, toAddr, promote, currentPlayer);
 		if (legalMove) {
+			for (GameListener gl : gameListeners) {
+				gl.moveMade(currentPlayer.toString(), fromAddr, toAddr, promote, board.getSnapShot());
+				List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
+				List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
+				gl.capturedPieces(upper, lower);
+			}
+			if (board.isCheck(currentPlayer)) {
+				Player opponent = getOpponent();
+				List<String> strategies = board.unCheckStrategies(opponent);
+				for (GameListener gl : gameListeners) {
+					gl.check(opponent.toString(), strategies);
+				}
+			}
 			nextTurn();
 			return true;
 		}
@@ -204,5 +197,14 @@ public final class MiniShogiImpl implements MiniShogi{
 	@Override
 	public void clearGameListener() {
 		gameListeners = new ArrayList<>();
+	}
+
+	@Override
+	public boolean hasEnd() {
+		return gameOver;
+	}
+	
+	private Player getOpponent() {
+		return playerQueue.peek();
 	}
 }

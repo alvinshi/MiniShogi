@@ -213,7 +213,12 @@ public final class Board {
 		return true;
 	}
 	
-	private boolean isCheck(Player currentPlayer) {
+	/**
+	 * return if it is check by the currentPlayer
+	 * @param currentPlayer : the player who checks
+	 * @return : true if it is a check
+	 */
+	public boolean isCheck(Player currentPlayer) {
 		for (int row = 0; row < BOARD_SIZE; row++) {
 			for (int col = 0; col < BOARD_SIZE; col++) {
 				Piece p = board[row][col];
@@ -240,7 +245,12 @@ public final class Board {
 		return strategies.isEmpty();
 	}
 	
-	private List<String> unCheckStrategies(Player currentPlayer) {
+	/**
+	 * return a list of strategies which can unCheck the check
+	 * @param currentPlayer : the player who is in check
+	 * @return : strategies
+	 */
+	public List<String> unCheckStrategies(Player currentPlayer) {
 		List<String> strategies = new LinkedList<>();
 		//Try all moves
 		for (int row = 0; row < BOARD_SIZE; row++) {
@@ -260,17 +270,14 @@ public final class Board {
 			}
 		}
 		//Try all drops
-		Map<Character, List<Piece>> capturedPieces = currentPlayer.getAllCapturedPieces();
-		for (Map.Entry<Character, List<Piece>> e : capturedPieces.entrySet()) {
-			if (e.getValue().size() > 0) {
-				//Get the piece but do not remove
-				Piece p = e.getValue().get(0);
-				for (int row = 0; row < BOARD_SIZE; row++) {
-					for (int col = 0; col < BOARD_SIZE; col++) {
-						if (canUncheckDrop(p, row, col, currentPlayer)) {
-							String to = index2addr(row, col);
-							strategies.add(Utils.stringifyDrop(p, to));
-						}
+		List<Piece> capturedPieces = currentPlayer.getAllCapturedPieces();
+		for (Piece p : capturedPieces) {
+			//Get the piece but do not remove
+			for (int row = 0; row < BOARD_SIZE; row++) {
+				for (int col = 0; col < BOARD_SIZE; col++) {
+					if (canUncheckDrop(p, row, col, currentPlayer)) {
+						String to = index2addr(row, col);							
+						strategies.add(Utils.stringifyDrop(p, to));
 					}
 				}
 			}
@@ -283,6 +290,7 @@ public final class Board {
 			return false;
 		}
 		//Try the move
+		Player opponent = getOpponent(currentPlayer);
 		Piece p = getPiece(startRow, startCol);
 		Piece pAtEndAddr = getPiece(endRow, endCol);
 		if (pAtEndAddr != null) {
@@ -291,7 +299,7 @@ public final class Board {
 		}
 		removePiece(startRow, startCol);
 		placePiece(p, endRow, endCol);
-		boolean succeed = isCheck(currentPlayer);
+		boolean succeed = !isCheck(opponent);
 		//Undo the move
 		placePiece(p, startRow, startCol);
 		placePiece(pAtEndAddr, endRow, endCol);
@@ -302,9 +310,29 @@ public final class Board {
 		if (getPiece(row, col) != null) return false;
 		if (!p.isLegalDrop(row, col, this)) return false;
 		placePiece(p, row, col);
-		boolean succeed = isCheck(currentPlayer);
+		boolean succeed = !isCheck(currentPlayer);
 		//Undo the drop
 		removePiece(row, col);
 		return succeed;
+	}
+	
+	/**
+	 * return a snapShot of the current board
+	 * @return : a string[][] of piece symbols
+	 */
+	public  String[][] getSnapShot() {
+		String[][] snapshot = new String[BOARD_SIZE][BOARD_SIZE];
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			for (int col = 0; col < BOARD_SIZE; col++) {
+				Piece p = board[BOARD_SIZE - col - 1][row];
+				if (p != null) {
+					snapshot[row][col] = p.toString();
+				}
+				else {
+					snapshot[row][col] = "";
+				}
+			}
+		}
+		return snapshot;
 	}
 }
