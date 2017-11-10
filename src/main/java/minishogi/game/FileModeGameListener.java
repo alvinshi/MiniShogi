@@ -26,7 +26,7 @@ final class FileModeGameListener implements GameListener {
 	public void nextTurn(String player) {
 		currentMove++;
 		if (currentMove == totalMoves && !game.hasEnd()) {
-			System.out.println(player + ">");
+			System.out.println(player + "> ");
 		}
 	}
 
@@ -47,15 +47,19 @@ final class FileModeGameListener implements GameListener {
 	@Override
 	public void capturedPieces(List<String> upper, List<String> lower) {
 		if (currentMove == totalMoves - 1 || game.hasEnd()) {
-			System.out.print("Captures UPPER:");
+			System.out.print("Captures UPPER: ");
+			StringBuilder pieces = new StringBuilder();
 			for (String s : upper) {
-				System.out.print(" " + s);
+				pieces.append(" " + s);
 			}
-			System.out.print("\nCaptures lower:");
+			System.out.println(pieces.toString().trim());
+			System.out.print("Captures lower: ");
+			pieces = new StringBuilder();
 			for (String s : lower) {
-				System.out.print(" " + s);
+				pieces.append(" " + s);
 			}
-			System.out.println("\n");
+			System.out.println(pieces.toString().trim());
+			System.out.println();
 		}
 	}
 

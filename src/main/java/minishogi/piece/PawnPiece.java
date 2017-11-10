@@ -55,7 +55,7 @@ public final class PawnPiece extends AbstractPiece{
 		board.placePiece(this, row, col);
 		boolean checkMate = board.isCheckMate(owner);
 		board.removePiece(row, col);
-		if (p != null) owner.addCapturedPiece(this);
+		if (p != null) owner.addCapturedPieceToTheFront(this);
 		return !checkMate;
 	}
 

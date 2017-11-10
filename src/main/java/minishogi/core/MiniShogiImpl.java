@@ -97,6 +97,7 @@ public final class MiniShogiImpl implements MiniShogi{
 	
 	/**
 	 * Default constructor to start a new game
+	 * @param gl : gameListener
 	 * @throws FileNotFoundException : the game.init file cannot be found
 	 * @throws InstantiationException : failed to create piece
 	 * @throws IllegalAccessException : does not have access to the corresponding piece class
@@ -106,10 +107,11 @@ public final class MiniShogiImpl implements MiniShogi{
 	 * @throws SecurityException : security
 	 * @throws ClassNotFoundException : class is not found
 	 */
-	public MiniShogiImpl() throws FileNotFoundException, InstantiationException, 
+	public MiniShogiImpl(GameListener gl) throws FileNotFoundException, InstantiationException, 
 	IllegalAccessException, IllegalArgumentException, InvocationTargetException, 
 	NoSuchMethodException, SecurityException, ClassNotFoundException {
 		gameListeners = new ArrayList<>();
+		gameListeners.add(gl);
 		newGame();
 	}
 
@@ -127,7 +129,6 @@ public final class MiniShogiImpl implements MiniShogi{
 		lowerPlayer = new Player(false);
 		playerQueue.add(lowerPlayer);
 		playerQueue.add(upperPlayer);
-		nextTurn();
 		
 		//Initialize Pieces and Board
 		board = new Board();
@@ -148,6 +149,13 @@ public final class MiniShogiImpl implements MiniShogi{
 			board.placePiece(p, address);
 		}
 		sc.close();
+		for (GameListener gl : gameListeners) {
+			gl.moveMade(null, null, null, true, board.getSnapShot());
+			List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
+			List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
+			gl.capturedPieces(upper, lower);
+		}
+		nextTurn();
 	}
 	
 	@Override

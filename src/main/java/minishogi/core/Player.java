@@ -57,7 +57,11 @@ public final class Player {
 		capturedPieces.add(p);
 	}
 	
-	void addCapturedPieceToTheFront(Piece p) {
+	/**
+	 * Add to the front
+	 * @param p : the piece to add
+	 */
+	public void addCapturedPieceToTheFront(Piece p) {
 		capturedPieces.add(0, p);
 	}
 	

@@ -164,18 +164,21 @@ public final class Board {
 		//Finish checking, make the move
 		Piece p = getPiece(startRow, startCol);
 		Piece pAtEndAddr = getPiece(endRow, endCol);
-		if (pAtEndAddr != null) {
-			//Capture the piece
-			removePiece(endRow, endCol);
-			pAtEndAddr.capture(currentPlayer);
-			currentPlayer.addCapturedPiece(pAtEndAddr);
-		}
 		removePiece(startRow, startCol);
 		placePiece(p, endRow, endCol);
 		if (p instanceof PawnPiece) p.promote(startRow, endRow, this);
 		//Cannot move into a check position
 		Player opponent = getOpponent(currentPlayer);
-		if (isCheck(opponent)) return false;
+		if (isCheck(opponent)) {
+			removePiece(endRow, endCol);
+			placePiece(p, startRow, startCol);
+			return false;
+		}
+		if (pAtEndAddr != null) {
+			//Capture the piece
+			pAtEndAddr.capture(currentPlayer);
+			currentPlayer.addCapturedPiece(pAtEndAddr);
+		}
 		return true;
 	}
 	

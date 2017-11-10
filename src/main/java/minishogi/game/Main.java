@@ -1,6 +1,7 @@
 package minishogi.game;
 
 import java.util.List;
+import java.util.Scanner;
 
 import minishogi.core.GameListener;
 import minishogi.core.MiniShogiImpl;
@@ -12,9 +13,28 @@ import minishogi.utils.Utils.TestCase;
  * @author alvinshi
  *
  */
-public class Main {
-	private static final String ERROR_MSG = 
-		"Failed to start MiniShogi due to file damage, check the game config or reinstall the game";
+public class Main {	
+	private static final String IM_FLAG = "-i";
+	private static final String FM_FLAG = "-f";
+	
+	/**
+	 * run the interaction mode
+	 * @throws Exception : failed to load the file
+	 */
+	public static void runInteractionMode() throws Exception{
+		MiniShogiImpl game = new MiniShogiImpl(new InteractionModeGameListener());
+	    Scanner in = new Scanner(System.in);
+	    while (!game.hasEnd()) {
+			String[] move = (in.nextLine()).split("\\s+");
+			if (move[0].equals("move")) {
+				game.move(move[1], move[2], move.length == 4);
+			}
+			else {
+				game.drop(move[1].charAt(0), move[2]);
+			}
+	    }
+	    in.close();
+	}
 	
 	/**
 	 * run the file mode using the file in the specified path
@@ -44,10 +64,10 @@ public class Main {
 	 * @throws Exception : System Error
 	 */
 	public static void main(String[] args) throws Exception {
-		if (args[0].equals("-i")) {
-			//TODO : Interaction Mode
+		if (args[0].equals(IM_FLAG)) {
+			runInteractionMode();
 		}
-		else if (args[0].equals("-f")) {
+		else if (args[0].equals(FM_FLAG)) {
 			runFileMode(args[1]);
 		}
 	}
