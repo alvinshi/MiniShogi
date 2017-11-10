@@ -88,4 +88,10 @@ final class FileModeGameListener implements GameListener {
 	public void checkMate(String winner) {
 		System.out.println(winner + " player wins.  Checkmate.");
 	}
+
+
+	@Override
+	public void tie() {
+		System.out.println("Tie game.  Too many moves.");
+	}
 }

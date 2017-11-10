@@ -61,5 +61,10 @@ public interface GameListener {
 	 * @param lower : list of pieces captured by the lower player
 	 */
 	void capturedPieces(List<String> upper, List<String> lower);
+	
+	/**
+	 * The game has tied
+	 */
+	void tie();
 
 }

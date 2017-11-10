@@ -25,7 +25,7 @@ public final class KingPiece extends AbstractPiece{
 	}
 	
 	@Override
-	public boolean promote(int endRow, Board board) {
+	public boolean promote(int startRow, int endRow, Board board) {
 		return false;
 	}
 

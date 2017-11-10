@@ -38,11 +38,12 @@ public interface Piece {
 	/**
 	 * promote the piece based on the Board and the row
 	 * the piece landed
+	 * @param startRow : the row the piece is currently at
 	 * @param endRow : the row the piece moves to
 	 * @param board : provide information about where the promotion row is
 	 * @return true if the promotion is valid, false otherwise
 	 */
-	boolean promote(int endRow, Board board);
+	boolean promote(int startRow, int endRow, Board board);
 	
 	/**
 	 * check is the move is within the range of the piece

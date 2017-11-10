@@ -46,12 +46,14 @@ public abstract class AbstractPiece implements Piece{
 	}
 	
 	@Override
-	public abstract boolean promote(int endRow, Board board);
+	public abstract boolean promote(int startRow, int endRow, Board board);
 	
 	protected abstract void demote();
 		
-	protected boolean canPromote(int row, Board board) {
-		return row == board.getPromoteRow(facing);
+	protected boolean canPromote(int startRow, int endRow, Board board) {
+		if (promoted) return false;
+		return (startRow == board.getPromoteRow(facing) |
+				endRow == board.getPromoteRow(facing));
 	}
 	
 	@Override

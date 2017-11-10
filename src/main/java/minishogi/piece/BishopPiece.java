@@ -25,8 +25,8 @@ public final class BishopPiece extends AbstractPiece{
 	}
 
 	@Override
-	public boolean promote(int endRow, Board board ) {
-		if (!canPromote(endRow, board)) {
+	public boolean promote(int startRow, int endRow, Board board ) {
+		if (!canPromote(startRow, endRow, board)) {
 			return false;
 		}
 		promote();

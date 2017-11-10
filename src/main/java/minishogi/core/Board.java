@@ -141,7 +141,7 @@ public final class Board {
 		if (p.getOwner() != currentPlayer) return false;
 		if (!p.isValidMove(startRow, startCol, endRow, endCol, this)) return false;
 		if (promote) {
-			if (!p.promote(endRow, this)) return false;
+			if (!p.promote(startRow, endRow, this)) return false;
 		}
 		Piece pAtEndAddr = getPiece(endRow, endCol);
 		if (pAtEndAddr != null && pAtEndAddr.getOwner() == currentPlayer) return false;
@@ -172,7 +172,7 @@ public final class Board {
 		}
 		removePiece(startRow, startCol);
 		placePiece(p, endRow, endCol);
-		if (p instanceof PawnPiece) p.promote(endRow, this);
+		if (p instanceof PawnPiece) p.promote(startRow, endRow, this);
 		//Cannot move into a check position
 		Player opponent = getOpponent(currentPlayer);
 		if (isCheck(opponent)) return false;
