@@ -12,8 +12,9 @@ import java.util.List;
 public interface GameListener {
 	/**
 	 * A new turn has started
+	 * @param player : the name of the player
 	 */
-	void nextTurn();
+	void nextTurn(String player);
 	
 	/**
 	 * A valid move has been made on the board
@@ -27,13 +28,18 @@ public interface GameListener {
 	
 	/**
 	 * A valid drop has been made on the board
+	 * @param player : the player who dropped
+	 * @param piece : the symbol of the piece to drop
+	 * @param address : to address
+	 * @param board : a snapshot of the board
 	 */
-	void dropMade();
+	void dropMade(String player, String piece, String address, String[][] board);
 	
 	/**
 	 * A invalid move/drop detected
+	 * @param winner : name of the winner
 	 */
-	void invalidMove();
+	void invalidMove(String winner);
 	
 
 	/**
@@ -42,6 +48,12 @@ public interface GameListener {
 	 * @param strategies : possible strategies
 	 */
 	void check(String sadPerson, List<String> strategies);
+	
+	/**
+	 * A checkMate happened
+	 * @param winner : the winner
+	 */
+	void checkMate(String winner);
 	
 	/**
 	 * List the captured pieces of each player

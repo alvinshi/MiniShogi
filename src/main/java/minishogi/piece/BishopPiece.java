@@ -45,12 +45,12 @@ public final class BishopPiece extends AbstractPiece{
 
 	@Override
 	protected boolean isWithinMoveRange(int startRow, int startCol, int endRow, int endCol, Board board) {
-		if (promoted) {
+		if (promoted) {			
 			return (PieceMoveUtil.bishopPieceMoveCheck(startRow, startCol, endRow, endCol, board) ||
 					PieceMoveUtil.kingPieceMoveCheck(startRow, startCol, endRow, endCol));
 		}
 		else {
-			return PieceMoveUtil.kingPieceMoveCheck(startRow, startCol, endRow, endCol);
+			return PieceMoveUtil.bishopPieceMoveCheck(startRow, startCol, endRow, endCol, board);
 		}
 	}
 }

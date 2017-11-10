@@ -22,7 +22,7 @@ public final class PawnPiece extends AbstractPiece{
 	
 	@Override
 	public void promote() {
-		promoted = false;
+		promoted = true;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public final class PawnPiece extends AbstractPiece{
 
 	@Override
 	protected void demote() {
-		promoted = true;
+		promoted = false;
 	}
 
 	@Override
@@ -44,16 +44,18 @@ public final class PawnPiece extends AbstractPiece{
 		Player owner = getOwner();
 		for (int i = 0; i < board.getBoardSize(); i++) {
 			Piece p = board.getPiece(i, col);
-			if (p != null && p.getOwner() == owner) {
+			if (p != null && p.getOwner() == owner && (p.getSymbol() == 'p' || p.getSymbol() == 'P')) {
 				return false;
 			}
 		}
 		//Cannot be dropped into the promotion zone
 		if (board.getPromoteRow(owner.getFacing()) == row) return false;
 		//Cannot lead to an immediate checkMate
+		Piece p = owner.getPiece(getSymbol());
 		board.placePiece(this, row, col);
 		boolean checkMate = board.isCheckMate(owner);
 		board.removePiece(row, col);
+		if (p != null) owner.addCapturedPiece(this);
 		return !checkMate;
 	}
 
@@ -62,6 +64,8 @@ public final class PawnPiece extends AbstractPiece{
 		if (promoted) {
 			return PieceMoveUtil.goldGeneralPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
 		}
-		return PieceMoveUtil.pawnPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
+		else{
+			return PieceMoveUtil.pawnPieceMoveCheck(startRow, startCol, endRow, endCol, facing);
+		}
 	}
 }

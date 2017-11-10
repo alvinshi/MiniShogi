@@ -14,61 +14,78 @@ import minishogi.utils.Utils;
 final class FileModeGameListener implements GameListener {
 	private final int totalMoves;
 	private int currentMove = 0;
+	private final MiniShogi game;
 	
-	FileModeGameListener(int totalMoves) {
+	FileModeGameListener(MiniShogi game, int totalMoves) {
 		this.totalMoves = totalMoves;
+		this.game = game;
 	}
 	
 
 	@Override
-	public void nextTurn() {
+	public void nextTurn(String player) {
 		currentMove++;
+		if (currentMove == totalMoves && !game.hasEnd()) {
+			System.out.println(player + ">");
+		}
 	}
 
 	@Override
 	public void moveMade(String player, String fromAddr, String toAddr, boolean promote, String[][] board) {
-		System.out.print(player + " player action: move " + fromAddr + " " + toAddr);
-		if (promote) {
-			System.out.println(" promote");
-		}
-		else {
-			System.out.println();
-		}
-		System.out.println(Utils.stringifyBoard(board));
-		
+		if (currentMove == totalMoves - 1 || game.hasEnd()) {
+			System.out.print(player + " player action: move " + fromAddr + " " + toAddr);
+			if (promote) {
+				System.out.println(" promote");
+			}
+			else {
+				System.out.println();
+			}
+			System.out.println(Utils.stringifyBoard(board));
+		}		
 	}
 	
 	@Override
 	public void capturedPieces(List<String> upper, List<String> lower) {
-		System.out.print("Captures UPPER:");
-		for (String s : upper) {
-			System.out.print(" " + s);
+		if (currentMove == totalMoves - 1 || game.hasEnd()) {
+			System.out.print("Captures UPPER:");
+			for (String s : upper) {
+				System.out.print(" " + s);
+			}
+			System.out.print("\nCaptures lower:");
+			for (String s : lower) {
+				System.out.print(" " + s);
+			}
+			System.out.println("\n");
 		}
-		System.out.println("\nCaptures lower:");
-		for (String s : lower) {
-			System.out.print(" " + s);
-		}
-		System.out.println();
 	}
 
 	@Override
-	public void dropMade() {
-		// TODO Auto-generated method stub
-		
+	public void dropMade(String player, String piece, String address, String[][] board) {
+		if (currentMove == totalMoves - 1 || game.hasEnd()) {
+			System.out.println(player + " player action: drop " + piece + " " + address);
+			System.out.println(Utils.stringifyBoard(board));
+		}
 	}
 
 	@Override
-	public void invalidMove() {
-		// TODO Auto-generated method stub
-		
+	public void invalidMove(String winner) {
+		System.out.println(winner + " player wins.  Illegal move.");
 	}
 
 	@Override
 	public void check(String sadPerson, List<String> strategies) {
-		System.out.println(sadPerson + " player is in check!");
-		System.out.println("Available moves:");
-		for (String s : strategies) {
-			System.out.println(s);
+		if (currentMove == totalMoves - 1 || game.hasEnd()) {
+			System.out.println(sadPerson + " player is in check!");
+			System.out.println("Available moves:");
+			for (String s : strategies) {
+				System.out.println(s);
+			}
 		}
+	}
+
+
+	@Override
+	public void checkMate(String winner) {
+		System.out.println(winner + " player wins.  Checkmate.");
 	}
 }

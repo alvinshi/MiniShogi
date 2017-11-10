@@ -17,12 +17,12 @@ class PieceMoveUtil {
 	}
 	
 	static boolean rookPieceMoveCheck(int startRow, int startCol, int endRow, int endCol, Board board) {
-		int deltaRow = Math.abs(endRow - startRow);
-		int deltaCol = Math.abs(endCol - startCol);
-		if (Math.min(deltaRow, deltaCol) != 0) return false;
+		int deltaRow = endRow - startRow;
+		int deltaCol = endCol - startCol;
+		if (Math.min(Math.abs(deltaRow), Math.abs(deltaCol)) != 0) return false;
 		if (deltaCol == 0) {
 			int dRow = (deltaRow < 0) ? -1 : 1;
-			for (int i = 1; i < deltaRow; i++) {
+			for (int i = 1; i < Math.abs(deltaRow); i++) {
 				int row = startRow + dRow * i;
 				if (board.getPiece(row, startCol) != null) return false;
 			}
@@ -31,7 +31,7 @@ class PieceMoveUtil {
 		else {
 			assert(deltaRow == 0);
 			int dCol = (deltaCol < 0) ? -1 : 1;
-			for (int i = 1; i < deltaCol; i++) {
+			for (int i = 1; i < Math.abs(deltaCol); i++) {
 				int col = startCol + dCol * i;
 				if (board.getPiece(startRow, col) != null) return false;
 			}
@@ -60,8 +60,8 @@ class PieceMoveUtil {
 		int deltaCol = endCol - startCol;
 		if (deltaRow == 0 && (deltaCol == 1 || deltaCol == -1)) return true;
 		else if (deltaCol == 0 && (deltaRow == 1 || deltaRow == -1)) return true;
-		else if (facing == Facing.DOWN) return (deltaRow == 1 && (deltaCol == -1 || deltaCol == -1));
-		else return (deltaRow == -1 && (deltaCol == -1 || deltaCol == -1));
+		else if (facing == Facing.DOWN) return (deltaRow == 1 && (deltaCol == -1 || deltaCol == 1));
+		else return (deltaRow == -1 && (deltaCol == -1 || deltaCol == 1));
 	}
 	
 	static boolean silverGeneralPieceMoveCheck(int startRow, int startCol, int endRow, int endCol, Facing facing) {

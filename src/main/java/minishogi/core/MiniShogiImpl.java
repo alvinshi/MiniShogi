@@ -22,7 +22,7 @@ import minishogi.utils.Utils.TestCase;
 public final class MiniShogiImpl implements MiniShogi{
 	private static final String GAME_INIT_FILE = "config/game/game.init";
 	private static final String PIECE_PACKAGE_PATH = "minishogi.piece.";
-	private static final int MOVE_LIMIT = 200;
+	private static final int MOVE_LIMIT = 400;
 	
 	private int turn;
 	private boolean gameOver = true;
@@ -34,11 +34,15 @@ public final class MiniShogiImpl implements MiniShogi{
 	private List<GameListener> gameListeners;
 	
 	private void nextTurn() {
+		turn++;
+		if (turn > MOVE_LIMIT) {
+			gameOver = true;
+		}
+		if (gameOver) return;
 		currentPlayer = playerQueue.poll();
 		playerQueue.add(currentPlayer);
-		turn++;
-		if (turn >= MOVE_LIMIT) {
-			gameOver = true;
+		for (GameListener gl : gameListeners) {
+			gl.nextTurn(currentPlayer.toString());
 		}
 	}
 	
@@ -142,51 +146,99 @@ public final class MiniShogiImpl implements MiniShogi{
 		}
 		sc.close();
 	}
-
+	
 	@Override
 	public boolean move(String fromAddr, String toAddr, boolean promote) {
 		if (gameOver) return false;
 		boolean legalMove = board.makeMove(fromAddr, toAddr, promote, currentPlayer);
+		List<String> strategies = new LinkedList<>();
+		Player opponent = getOpponent();
+		boolean isCheck = false;
+		
 		if (legalMove) {
-			for (GameListener gl : gameListeners) {
-				gl.moveMade(currentPlayer.toString(), fromAddr, toAddr, promote, board.getSnapShot());
-				List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
-				List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
-				gl.capturedPieces(upper, lower);
-			}
 			if (board.isCheck(currentPlayer)) {
-				Player opponent = getOpponent();
-				List<String> strategies = board.unCheckStrategies(opponent);
+				isCheck = true;
+				strategies = board.unCheckStrategies(opponent);
+				if (strategies.size() == 0) {
+					gameOver = true;
+				}
+			}
+		}
+		else {
+			gameOver = true;
+		}
+		
+		//Inform the observer
+		for (GameListener gl : gameListeners) {
+			gl.moveMade(currentPlayer.toString(), fromAddr, toAddr, promote, board.getSnapShot());
+			List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
+			List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
+			gl.capturedPieces(upper, lower);
+		}
+		if (legalMove) {
+			if (isCheck && !gameOver) {
 				for (GameListener gl : gameListeners) {
 					gl.check(opponent.toString(), strategies);
 				}
 			}
-			nextTurn();
-			return true;
+			else if (isCheck && gameOver) {
+				for (GameListener gl : gameListeners) {
+					gl.checkMate(currentPlayer.toString());
+				}
+			}
 		}
 		else {
+			for (GameListener gl : gameListeners) {
+				gl.invalidMove(getOpponent().toString());
+			}
 			gameOver = true;
-			return false;
 		}
+		
+		//Move on
+		if (!gameOver) {
+			nextTurn();
+		}
+		return legalMove;
 	}
 
 	@Override
 	public boolean drop(char piece, String address) {
 		if (gameOver) return false;
 		Piece p = currentPlayer.getPiece(piece);
+		boolean legalDrop = true;
 		if (p == null) {
 			gameOver = true;
-			return false;
-		}
-		boolean legalDrop = board.makeDrop(p, address, currentPlayer);
-		if (legalDrop) {
-			nextTurn();
-			return true;
+			legalDrop = false;
 		}
 		else {
-			gameOver = true;
-			return false;
+			legalDrop = board.makeDrop(p, address, currentPlayer);
 		}
+		if (!legalDrop && p != null) {
+			currentPlayer.addCapturedPieceToTheFront(p);
+		}
+		for (GameListener gl : gameListeners) {
+			gl.dropMade(currentPlayer.toString(), String.valueOf(piece), address, board.getSnapShot());
+			List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
+			List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
+			gl.capturedPieces(upper, lower);
+		}
+		if (board.isCheck(currentPlayer)) {
+			Player opponent = getOpponent();
+			List<String> strategies = board.unCheckStrategies(opponent);
+			for (GameListener gl : gameListeners) {
+				gl.check(opponent.toString(), strategies);
+			}
+		}
+		if (legalDrop) {
+			nextTurn();
+		}
+		else {
+			for (GameListener gl : gameListeners) {
+				gl.invalidMove(getOpponent().toString());
+			}
+			gameOver = true;
+		}
+		return legalDrop;
 	}
 
 	@Override

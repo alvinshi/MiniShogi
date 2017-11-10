@@ -1,11 +1,13 @@
 package minishogi.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import minishogi.piece.KingPiece;
+import minishogi.piece.PawnPiece;
 import minishogi.utils.Facing;
 import minishogi.utils.PieceMove;
 import minishogi.utils.Utils;
@@ -170,6 +172,7 @@ public final class Board {
 		}
 		removePiece(startRow, startCol);
 		placePiece(p, endRow, endCol);
+		if (p instanceof PawnPiece) p.promote(endRow, this);
 		//Cannot move into a check position
 		Player opponent = getOpponent(currentPlayer);
 		if (isCheck(opponent)) return false;
@@ -182,6 +185,7 @@ public final class Board {
 		int col = addr2Col(address);
 		if (getPiece(row, col) != null) return false;
 		if (!p.isLegalDrop(row, col, this)) return false;
+		placePiece(p, row, col);
 		return true;
 	}
 	
@@ -270,7 +274,8 @@ public final class Board {
 			}
 		}
 		//Try all drops
-		List<Piece> capturedPieces = currentPlayer.getAllCapturedPieces();
+		//Create a view of the pieces the player has right now
+		List<Piece> capturedPieces = new ArrayList<>(currentPlayer.getAllCapturedPieces());
 		for (Piece p : capturedPieces) {
 			//Get the piece but do not remove
 			for (int row = 0; row < BOARD_SIZE; row++) {
@@ -309,8 +314,9 @@ public final class Board {
 	private boolean canUncheckDrop(Piece p, int row, int col, Player currentPlayer) {
 		if (getPiece(row, col) != null) return false;
 		if (!p.isLegalDrop(row, col, this)) return false;
+		Player opponent = getOpponent(currentPlayer);
 		placePiece(p, row, col);
-		boolean succeed = !isCheck(currentPlayer);
+		boolean succeed = !isCheck(opponent);
 		//Undo the drop
 		removePiece(row, col);
 		return succeed;

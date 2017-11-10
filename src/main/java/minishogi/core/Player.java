@@ -49,13 +49,26 @@ public final class Player {
 		else return Character.toLowerCase(originalSymbol);
 	}
 	
-	void addCapturedPiece(Piece p) {
+	/**
+	 * Add a captured piece
+	 * @param p : the piece to add
+	 */
+	public void addCapturedPiece(Piece p) {
 		capturedPieces.add(p);
 	}
 	
-	Piece getPiece(char symbol) {
+	void addCapturedPieceToTheFront(Piece p) {
+		capturedPieces.add(0, p);
+	}
+	
+	/**
+	 * Get a captured piece based on the symbol
+	 * @param symbol : the symbol of the piece
+	 * @return : the piece
+	 */
+	public Piece getPiece(char symbol) {
 		for (Piece p : capturedPieces) {
-			if (p.getSymbol() == symbol) {
+			if (Character.toLowerCase(p.getSymbol()) == symbol) {
 				capturedPieces.remove(p);
 				return p;
 			}

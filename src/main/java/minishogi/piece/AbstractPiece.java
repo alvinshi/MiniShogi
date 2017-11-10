@@ -71,7 +71,7 @@ public abstract class AbstractPiece implements Piece{
 	
 	@Override 
 	public boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Board board) {
-		if (startRow == startCol && endRow == endCol) return false;
+		if (startRow == endRow && startCol == endCol) return false;
 		Piece p = board.getPiece(endRow, endCol);
 		if (p != null && p.getOwner() == owner) return false;
 		return isWithinMoveRange(startRow, startCol, endRow, endCol, board);
