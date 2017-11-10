@@ -25,8 +25,9 @@ public class MiniShogiImplTest {
 	private List<String> testCases = new LinkedList<>();
 	private ByteArrayOutputStream baos;
 	private PrintStream ps;
+	private PrintStream old;
 	private int count = 0;
-	private static final int NON_SPECIAL_CASES = 53;
+	private static final int NON_SPECIAL_CASES = 56;
 	
 	/**
 	 * Load the all path for test cases
@@ -42,6 +43,7 @@ public class MiniShogiImplTest {
 		}
 		baos = new ByteArrayOutputStream();
 	    ps = new PrintStream(baos);
+	    old = System.out;
 	    System.setOut(ps);
 	}
 	/**
@@ -60,11 +62,15 @@ public class MiniShogiImplTest {
 				count++;
 			}
 			else {
+				System.setOut(old);
+				System.out.println(testCase);
+				System.setOut(ps);
 				specialCases.add(testCase);
 			}
 			baos.reset();
 		}
-	    System.setOut(System.out);
+		System.setOut(old);
+		System.out.println(count);
 		assertTrue(count == NON_SPECIAL_CASES);
 	}
 }

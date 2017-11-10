@@ -81,6 +81,7 @@ final class FileModeGameListener implements GameListener {
 		if (currentMove == totalMoves - 1 || game.hasEnd()) {
 			System.out.println(sadPerson + " player is in check!");
 			System.out.println("Available moves:");
+			strategies.sort(String::compareToIgnoreCase);
 			for (String s : strategies) {
 				System.out.println(s);
 			}
