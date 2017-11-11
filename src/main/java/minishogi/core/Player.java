@@ -48,7 +48,7 @@ public final class Player {
 		if (isUpperPlayer) return Character.toUpperCase(originalSymbol);
 		else return Character.toLowerCase(originalSymbol);
 	}
-	
+		
 	/**
 	 * Add a captured piece
 	 * @param p : the piece to add
@@ -58,11 +58,32 @@ public final class Player {
 	}
 	
 	/**
-	 * Add to the front
+	 * Insert a piece into specific index of the list
 	 * @param p : the piece to add
+	 * @param index : the index to insert the piece
 	 */
-	public void addCapturedPieceToTheFront(Piece p) {
-		capturedPieces.add(0, p);
+	public void addCapturedPieceToIndex(Piece p, int index) {
+		if (index < capturedPieces.size()) {
+			capturedPieces.add(index, p);
+		}
+		else {
+			capturedPieces.add(p);
+		}
+	}
+	
+	/**
+	 * Get the index of the piece in the capturedPiece list
+	 * @param p : the piece symbol
+	 * @return index or -1 if the piece is not in the list
+	 */
+	public int getCapturedPieceIndex(char p) {
+		for (int i = 0; i < capturedPieces.size(); i++) {
+			Piece piece = capturedPieces.get(i);
+			if (Character.toLowerCase(piece.getSymbol()) == p) {
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	/**

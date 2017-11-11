@@ -8,7 +8,6 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +25,6 @@ public class MiniShogiImplTest {
 	private ByteArrayOutputStream baos;
 	private PrintStream ps;
 	private PrintStream old;
-	private int count = 0;
-	private static final int NON_SPECIAL_CASES = 56;
 	
 	/**
 	 * Load the all path for test cases
@@ -52,25 +49,14 @@ public class MiniShogiImplTest {
 	 */
 	@Test
 	public void test() throws Exception {
-		List<String> specialCases = new ArrayList<>();
 		for (int i = 0; i < testCases.size(); i++) {
 			String testCase = testCases.get(i);
 			Main.runFileMode(testCase);
 			String reference = testCase.substring(0, testCase.length() - 2) + "out";
 			String fileString = new String(Files.readAllBytes(Paths.get(reference)), StandardCharsets.UTF_8);
-			if (fileString.equals(baos.toString())) {
-				count++;
-			}
-			else {
-				System.setOut(old);
-				System.out.println(testCase);
-				System.setOut(ps);
-				specialCases.add(testCase);
-			}
+			assertTrue(fileString.equals(baos.toString()));
 			baos.reset();
 		}
 		System.setOut(old);
-		System.out.println(count);
-		assertTrue(count == NON_SPECIAL_CASES);
 	}
 }

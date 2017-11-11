@@ -51,11 +51,12 @@ public final class PawnPiece extends AbstractPiece{
 		//Cannot be dropped into the promotion zone
 		if (board.getPromoteRow(owner.getFacing()) == row) return false;
 		//Cannot lead to an immediate checkMate
+		int index = owner.getCapturedPieceIndex(getSymbol());
 		Piece p = owner.getPiece(getSymbol());
 		board.placePiece(this, row, col);
 		boolean checkMate = board.isCheckMate(owner);
 		board.removePiece(row, col);
-		if (p != null) owner.addCapturedPieceToTheFront(this);
+		if (p != null) owner.addCapturedPieceToIndex(p, index);
 		return !checkMate;
 	}
 

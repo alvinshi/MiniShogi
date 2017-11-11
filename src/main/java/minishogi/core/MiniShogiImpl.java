@@ -214,6 +214,7 @@ public final class MiniShogiImpl implements MiniShogi{
 	@Override
 	public boolean drop(char piece, String address) {
 		if (gameOver) return false;
+		int index = currentPlayer.getCapturedPieceIndex(piece);
 		Piece p = currentPlayer.getPiece(piece);
 		boolean legalDrop = true;
 		if (p == null) {
@@ -224,7 +225,7 @@ public final class MiniShogiImpl implements MiniShogi{
 			legalDrop = board.makeDrop(p, address, currentPlayer);
 		}
 		if (!legalDrop && p != null) {
-			currentPlayer.addCapturedPieceToTheFront(p);
+			currentPlayer.addCapturedPieceToIndex(p, index);
 		}
 		List<String> strategies = new LinkedList<>();
 		Player opponent = getOpponent();
