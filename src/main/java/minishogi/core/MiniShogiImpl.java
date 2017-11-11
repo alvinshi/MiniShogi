@@ -68,6 +68,8 @@ public final class MiniShogiImpl implements MiniShogi{
 		playerQueue = new LinkedList<>();
 		upperPlayer = new Player(true);
 		lowerPlayer = new Player(false);
+		playerQueue.add(lowerPlayer);
+		playerQueue.add(upperPlayer);
 		
 		//The board
 		board = new Board();
@@ -77,6 +79,8 @@ public final class MiniShogiImpl implements MiniShogi{
 			String address = ip.position;
 			placePiece(symbol, address, board, upperPlayer, lowerPlayer);
 		}
+		
+		//The captured Pieces
 		List<String> upperCaptures = tc.upperCaptures;
 		for (String symbol : upperCaptures) {
 			if (symbol.length() < 1) continue;
@@ -89,9 +93,6 @@ public final class MiniShogiImpl implements MiniShogi{
 			Piece p = AbstractPiece.produce(symbol, upperPlayer, lowerPlayer);
 			lowerPlayer.addCapturedPiece(p);
 		}
-		
-		playerQueue.add(lowerPlayer);
-		playerQueue.add(upperPlayer);
 		nextTurn();
 	}
 	
@@ -149,12 +150,7 @@ public final class MiniShogiImpl implements MiniShogi{
 			board.placePiece(p, address);
 		}
 		sc.close();
-		for (GameListener gl : gameListeners) {
-			gl.moveMade(null, null, null, true, board.getSnapShot());
-			List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
-			List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
-			gl.capturedPieces(upper, lower);
-		}
+		boardcastGameState();
 		nextTurn();
 	}
 	
@@ -180,34 +176,13 @@ public final class MiniShogiImpl implements MiniShogi{
 		
 		//Inform the observer
 		for (GameListener gl : gameListeners) {
-			gl.moveMade(currentPlayer.toString(), fromAddr, toAddr, promote, board.getSnapShot());
-			List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
-			List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
-			gl.capturedPieces(upper, lower);
+			gl.moveMade(currentPlayer.toString(), fromAddr, toAddr, promote);
 		}
-		if (legalMove) {
-			if (isCheck && !gameOver) {
-				for (GameListener gl : gameListeners) {
-					gl.check(opponent.toString(), strategies);
-				}
-			}
-			else if (isCheck && gameOver) {
-				for (GameListener gl : gameListeners) {
-					gl.checkMate(currentPlayer.toString());
-				}
-			}
-		}
-		else {
-			for (GameListener gl : gameListeners) {
-				gl.invalidMove(getOpponent().toString());
-			}
-			gameOver = true;
-		}
+		boardcastGameState();
+		boardcastMoveResult(legalMove, isCheck, strategies);
 		
 		//Move on
-		if (!gameOver) {
-			nextTurn();
-		}
+		nextTurn();
 		return legalMove;
 	}
 
@@ -218,6 +193,7 @@ public final class MiniShogiImpl implements MiniShogi{
 		Piece p = currentPlayer.getPiece(piece);
 		boolean legalDrop = true;
 		if (p == null) {
+			//The player does not have the piece
 			gameOver = true;
 			legalDrop = false;
 		}
@@ -227,10 +203,10 @@ public final class MiniShogiImpl implements MiniShogi{
 		if (!legalDrop && p != null) {
 			currentPlayer.addCapturedPieceToIndex(p, index);
 		}
+		
 		List<String> strategies = new LinkedList<>();
 		Player opponent = getOpponent();
 		boolean isCheck = false;
-		
 		if (legalDrop) {
 			if (board.isCheck(currentPlayer)) {
 				isCheck = true;
@@ -243,14 +219,31 @@ public final class MiniShogiImpl implements MiniShogi{
 		else {
 			gameOver = true;
 		}
+		
 		//Inform the observer
 		for (GameListener gl : gameListeners) {
-			gl.dropMade(currentPlayer.toString(), String.valueOf(piece), address, board.getSnapShot());
+			gl.dropMade(currentPlayer.toString(), String.valueOf(piece), address);
+		}
+		boardcastGameState();
+		boardcastMoveResult(legalDrop, isCheck, strategies);
+		
+		//Move on
+		nextTurn();
+		return legalDrop;
+	}
+	
+	private void boardcastGameState() {
+		for (GameListener gl : gameListeners) {
+			gl.boardUpdate(board.getSnapShot());
 			List<String> upper = upperPlayer.getAllCapturedPiecesSnapShot();
 			List<String> lower = lowerPlayer.getAllCapturedPiecesSnapShot();
 			gl.capturedPieces(upper, lower);
 		}
-		if (legalDrop) {
+	}
+	
+	private void boardcastMoveResult(boolean isLegal, boolean isCheck, List<String> strategies) {
+		Player opponent = getOpponent();
+		if (isLegal) {
 			if (isCheck && !gameOver) {
 				for (GameListener gl : gameListeners) {
 					gl.check(opponent.toString(), strategies);
@@ -266,10 +259,7 @@ public final class MiniShogiImpl implements MiniShogi{
 			for (GameListener gl : gameListeners) {
 				gl.invalidMove(getOpponent().toString());
 			}
-			gameOver = true;
 		}
-		nextTurn();
-		return legalDrop;
 	}
 
 	@Override

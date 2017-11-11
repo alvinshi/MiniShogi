@@ -29,9 +29,18 @@ final class FileModeGameListener implements GameListener {
 			System.out.println(player + "> ");
 		}
 	}
+	
+
 
 	@Override
-	public void moveMade(String player, String fromAddr, String toAddr, boolean promote, String[][] board) {
+	public void boardUpdate(String[][] board) {
+		if (currentMove == totalMoves - 1 || game.hasEnd()) {
+			System.out.println(Utils.stringifyBoard(board));
+		}	
+	}
+
+	@Override
+	public void moveMade(String player, String fromAddr, String toAddr, boolean promote) {
 		if (currentMove == totalMoves - 1 || game.hasEnd()) {
 			System.out.print(player + " player action: move " + fromAddr + " " + toAddr);
 			if (promote) {
@@ -40,7 +49,6 @@ final class FileModeGameListener implements GameListener {
 			else {
 				System.out.println();
 			}
-			System.out.println(Utils.stringifyBoard(board));
 		}		
 	}
 	
@@ -64,10 +72,9 @@ final class FileModeGameListener implements GameListener {
 	}
 
 	@Override
-	public void dropMade(String player, String piece, String address, String[][] board) {
+	public void dropMade(String player, String piece, String address) {
 		if (currentMove == totalMoves - 1 || game.hasEnd()) {
 			System.out.println(player + " player action: drop " + piece + " " + address);
-			System.out.println(Utils.stringifyBoard(board));
 		}
 	}
 

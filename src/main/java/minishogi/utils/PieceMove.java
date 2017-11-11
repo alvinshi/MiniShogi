@@ -1,5 +1,7 @@
 package minishogi.utils;
 
+import java.util.Objects;
+
 /**
  * Represents a move
  * @author alvinshi
@@ -42,5 +44,17 @@ public class PieceMove {
 	 */
 	public boolean isEqual(int deltaRow, int deltaCol) {
 		return ((this.deltaRow == deltaRow) && (this.deltaCol == deltaCol));
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof PieceMove)) return false;
+		PieceMove m = (PieceMove)o;
+		return (m.deltaCol == deltaCol)&&(m.deltaRow == deltaRow);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(deltaCol, deltaRow);
 	}
 }

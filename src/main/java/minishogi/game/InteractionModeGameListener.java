@@ -16,9 +16,15 @@ final class InteractionModeGameListener implements GameListener {
 	public void nextTurn(String player) {
 		System.out.println(player + "> ");
 	}
+	
 
 	@Override
-	public void moveMade(String player, String fromAddr, String toAddr, boolean promote, String[][] board) {
+	public void boardUpdate(String[][] board) {
+		System.out.println(Utils.stringifyBoard(board));		
+	}
+
+	@Override
+	public void moveMade(String player, String fromAddr, String toAddr, boolean promote) {
 		if (fromAddr != null) {
 			System.out.print(player + " player action: move " + fromAddr + " " + toAddr);
 			if (promote) {
@@ -28,7 +34,6 @@ final class InteractionModeGameListener implements GameListener {
 				System.out.println();
 			}
 		}
-		System.out.println(Utils.stringifyBoard(board));		
 	}
 	
 	@Override
@@ -49,9 +54,8 @@ final class InteractionModeGameListener implements GameListener {
 	}
 
 	@Override
-	public void dropMade(String player, String piece, String address, String[][] board) {
+	public void dropMade(String player, String piece, String address) {
 		System.out.println(player + " player action: drop " + piece + " " + address);
-		System.out.println(Utils.stringifyBoard(board));
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import minishogi.utils.Facing;
  * @author alvinshi
  *
  */
-class PieceMoveUtil {
+final class PieceMoveUtil {
 	static boolean kingPieceMoveCheck(int startRow, int startCol, int endRow, int endCol) {
 		int deltaRow = Math.abs(endRow - startRow);
 		int deltaCol = Math.abs(endCol - startCol);

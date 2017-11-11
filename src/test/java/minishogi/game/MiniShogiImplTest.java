@@ -38,6 +38,7 @@ public class MiniShogiImplTest {
 				testCases.add(f.getPath());
 			}
 		}
+		//Set the system out to the actual string
 		baos = new ByteArrayOutputStream();
 	    ps = new PrintStream(baos);
 	    old = System.out;

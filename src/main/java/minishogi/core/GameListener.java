@@ -17,23 +17,27 @@ public interface GameListener {
 	void nextTurn(String player);
 	
 	/**
+	 * Show the current board state
+	 * @param board : a string[][] representation of the currentBoard
+	 */
+	void boardUpdate(String[][] board);
+	
+	/**
 	 * A valid move has been made on the board
 	 * @param player : the player who made the move
 	 * @param fromAddr : from address
 	 * @param toAddr : to address
 	 * @param promote : if promote a piece
-	 * @param board : a snapshot of the board
 	 */
-	void moveMade(String player, String fromAddr, String toAddr, boolean promote, String[][] board);
+	void moveMade(String player, String fromAddr, String toAddr, boolean promote);
 	
 	/**
 	 * A valid drop has been made on the board
 	 * @param player : the player who dropped
 	 * @param piece : the symbol of the piece to drop
 	 * @param address : to address
-	 * @param board : a snapshot of the board
 	 */
-	void dropMade(String player, String piece, String address, String[][] board);
+	void dropMade(String player, String piece, String address);
 	
 	/**
 	 * A invalid move/drop detected
@@ -41,7 +45,6 @@ public interface GameListener {
 	 */
 	void invalidMove(String winner);
 	
-
 	/**
 	 * A check happened
 	 * @param sadPerson : the player who is in check

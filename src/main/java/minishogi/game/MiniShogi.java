@@ -4,6 +4,7 @@ import minishogi.core.GameListener;
 
 /**
  * MiniShogi Game API
+ * The interface separates the MiniShogi core from the user interface
  * @author alvinshi
  *
  */

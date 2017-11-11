@@ -94,7 +94,7 @@ public abstract class AbstractPiece implements Piece{
 	
 	/**
 	 * Produce a piece based on the symbol
-	 * This factory method is there for testing
+	 * This factory method is there ONLY for testing
 	 * @param symbol : the symbol
 	 * @param upper : upper player reference
 	 * @param lower : lower player reference

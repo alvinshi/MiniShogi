@@ -257,7 +257,7 @@ public final class Board {
 	 * @param currentPlayer : the player who is in check
 	 * @return : strategies
 	 */
-	public List<String> unCheckStrategies(Player currentPlayer) {
+	List<String> unCheckStrategies(Player currentPlayer) {
 		List<String> strategies = new LinkedList<>();
 		//Try all moves
 		for (int row = 0; row < BOARD_SIZE; row++) {
@@ -329,7 +329,7 @@ public final class Board {
 	 * return a snapShot of the current board
 	 * @return : a string[][] of piece symbols
 	 */
-	public  String[][] getSnapShot() {
+	String[][] getSnapShot() {
 		String[][] snapshot = new String[BOARD_SIZE][BOARD_SIZE];
 		for (int row = 0; row < BOARD_SIZE; row++) {
 			for (int col = 0; col < BOARD_SIZE; col++) {
