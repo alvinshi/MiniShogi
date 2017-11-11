@@ -13,7 +13,7 @@ import minishogi.utils.Utils.TestCase;
  * @author alvinshi
  *
  */
-public class Main {	
+public class Main {
 	private static final String IM_FLAG = "-i";
 	private static final String FM_FLAG = "-f";
 	

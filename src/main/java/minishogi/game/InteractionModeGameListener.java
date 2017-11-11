@@ -67,6 +67,7 @@ final class InteractionModeGameListener implements GameListener {
 	public void check(String sadPerson, List<String> strategies) {
 		System.out.println(sadPerson + " player is in check!");
 		System.out.println("Available moves:");
+		strategies.sort(String::compareTo);
 		for (String s : strategies) {
 			System.out.println(s);
 		}
