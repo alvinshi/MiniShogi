@@ -16,6 +16,9 @@ import minishogi.utils.Utils.TestCase;
 public class Main {
 	private static final String IM_FLAG = "-i";
 	private static final String FM_FLAG = "-f";
+	private static final String ILLEGAL_ARG_MSG = "illegal argument";
+	private static final String ERROR_MSG = "Oops, the game failed to start properly, please check"
+			+ " the arguments you provided or reinstall the game.";
 	
 	/**
 	 * run the interaction mode
@@ -63,12 +66,19 @@ public class Main {
 	 * @param args : args format
 	 * @throws Exception : System Error
 	 */
-	public static void main(String[] args) throws Exception {
-		if (args[0].equals(IM_FLAG)) {
-			runInteractionMode();
-		}
-		else if (args[0].equals(FM_FLAG)) {
-			runFileMode(args[1]);
+	public static void main(String[] args) {
+		try {
+			if (args[0].equals(IM_FLAG)) {
+				runInteractionMode();
+			}
+			else if (args[0].equals(FM_FLAG)) {
+				runFileMode(args[1]);
+			}
+			else {
+				System.out.println(ILLEGAL_ARG_MSG);
+			}
+		} catch(Exception e) {
+			System.out.println(ERROR_MSG);
 		}
 	}
 }
