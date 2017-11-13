@@ -1,16 +1,19 @@
-# MiniShogi
-# 2017 box-take-home
-## By Alvin Shi
+# MiniShogi: 2017 box-take-home
+### By Alvin Shi
 
 ## Correctness
 The implementation passes all the test cases provided.
+
 To verify this, run the JUnit test provided in the `src/test/java` folder.
 The test case directly compares the output of the file mode with the corresponding reference solution.
 
 ## Project Structure
 The project is separated into four packages.
+
 `minishogi.core` and `minishogi.piece` contain the core logic of this particular MiniShogi implementation. 
+
 `minishogi.game` contains the implementation of user interface. In this particular case, a terminal-based interface is implemented. All user interfaces only depend on the MiniShogi interface. This effectively separates the back-end from the front-end.
+
 `minishogi.utils` contains some useful helper functions and data structures.
 
 Under  `config/game`, the `game.init` file contains the data which determines how a new game should be initialized. Java reflection is used to construct new objects based on the data contained in this file. To create a new piece on the board, simply use the format `<Piece Class Name>` `<Owner Name(uppercase)>` `<Address>`
@@ -25,11 +28,12 @@ Under  `config/game`, the `game.init` file contains the data which determines ho
 
 ## Design Tradeoff
 The idea of immutability was considered during the design process. The idea is that by making all objects (board, player, piece) in the game immutable, the game is modeled as moving from one state to another. Several advantages of this design are:
-   1. It makes it possible to incorporate the idea of History in the game.
-   2. It makes it easier to implement check and checkMate.
+1. It makes it possible to incorporate the idea of History in the game.
+2. It makes it easier to implement check and checkMate.
+
 However, the idea was not adopted because:
-   1. Immutable design demands more computing power and memory. It is not justified when History is not a required feature.
-   2. At least for me personally, it is more intuitive to model change in the model as the change of information in each object than as the transition from one state to another. The former modeling reduces the representational gap and possibly enhances the readability of the code.
+1. Immutable design demands more computing power and memory. It is not justified when History is not a required feature.
+2. At least for me personally, it is more intuitive to model change in the model as the change of information in each object than as the transition from one state to another. The former modeling reduces the representational gap and possibly enhances the readability of the code.
    
 ## Possible improvement 
 In retrospect, the game should probably have a Move class which models a move (either a move or a drop). With that, passing move information around and storing them will be easier and more intuitive.
@@ -37,4 +41,4 @@ In retrospect, the game should probably have a Move class which models a move (e
 ## Notes
 a. To turn MiniShogi into a full-scale shogi takes 4 steps. 1.Change the value of the BOARD_SIZE constant in the Board class. 2.Modify the game.init file to initialize the pieces correctly. 3. Change the regex format string in Board to allow new possible addresses. 4.Change the name of the project from MiniShogi to Shogi.
 
-b. The factory method `produce` in AbstractPiece is only three for the purpose of testing the game under file mode.
+b. The factory method `produce` in AbstractPiece is only there for the purpose of testing the game under file mode.
