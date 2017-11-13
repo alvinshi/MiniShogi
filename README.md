@@ -7,6 +7,9 @@ The implementation passes all the test cases provided.
 To verify this, run the JUnit test provided in the `src/test/java` folder.
 The test case directly compares the output of the file mode with the corresponding reference solution.
 
+## To Run
+Execute the main method in Main.java with appropriate arguments.
+
 ## Project Structure
 The project is separated into four packages.
 
